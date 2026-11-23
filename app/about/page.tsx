@@ -145,7 +145,7 @@ const HERO = {
   // Put your video in  public/videos/hero.mp4  (keep it small: 5-10 MB, muted).
   video: "/videos/video.crdownload",
   title: "Building Digital Empires",
-  since: "Since 2015",
+  since: "Since 2017",
   intro:
     "A full-service digital solutions company dedicated to helping businesses build, grow, and strengthen their digital presence.",
 };

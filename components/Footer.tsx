@@ -3,20 +3,22 @@ import Link from "next/link";
 
 const WRAP = "mx-auto w-full max-w-[1200px] px-5 sm:px-8";
 
-const FOOTER_SERVICES = [
-  "Web Designing",
-  "Web Development",
-  "Mobile App Dev",
-  "Digital Marketing",
-  "Hosting & Domain",
-  "E-Commerce",
+const FOOTER_SERVICES: [string, string][] = [
+  ["Graphic Designing", "/services/graphic-design"],
+  ["Web Development", "/services/web-development"],
+  ["Mobile App Dev", "/services/mobile-app-development"],
+  ["Hosting & Domain", "/services/hosting-deployment"],
+  ["Digital Marketing", "/services/digital-marketing"],
+  ["E-Commerce Application", "/services/e-commerce-application"],
+  ["Sales", "/services/sales"],
+  ["SEO", "/services/seo"],
 ];
 
 const QUICK_LINKS: [string, string][] = [
   ["Home", "/"],
   ["About Us", "/about"],
   ["Services", "/services"],
-  ["Portfolio", "/portfolio"],
+  ["Careers", "/careers"],
   ["Contact", "/contact"],
 ];
 
@@ -34,7 +36,7 @@ const SOCIALS = [
   },
   {
     label: "Facebook",
-    href: "#",
+    href: "https://www.facebook.com/empireaeitservices",
     icon: <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />,
   },
   {
@@ -157,9 +159,9 @@ export default function Footer() {
           <nav aria-label="Services">
             <h5 className={head}>Services</h5>
             <ul className="space-y-[11px]">
-              {FOOTER_SERVICES.map((s) => (
-                <li key={s}>
-                  <Link href="/services" className={link}>{s}</Link>
+              {FOOTER_SERVICES.map(([label, href]) => (
+                <li key={href}>
+                  <Link href={href} className={link}>{label}</Link>
                 </li>
               ))}
             </ul>

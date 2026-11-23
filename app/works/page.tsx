@@ -445,7 +445,7 @@ function WorksHero() {
 
 type ProjectCategory = "Web Development" | "Digital Marketing" | "App Development";
 type FilterCategory = "All Projects" | ProjectCategory;
-/** "light" = white text (for dark imagery), "dark" = near-black text (for light imagery). */
+/** "light" = white text (for dark backgrounds), "dark" = near-black text (for light backgrounds). */
 type OverlayTone = "light" | "dark";
 
 interface Project {
@@ -456,6 +456,8 @@ interface Project {
   image: string;
   imageAlt: string;
   overlayTone: OverlayTone;
+  /** 6-digit hex of the logo's own background, e.g. "#B87B04". */
+  bgColor: string;
   /** Optional. Relative paths use next/link, http(s) URLs open in a new tab. */
   href?: string;
   year?: string;
@@ -463,9 +465,9 @@ interface Project {
 
 const FILTER_CATEGORIES: FilterCategory[] = [
   "All Projects",
+  "App Development",
   "Web Development",
   "Digital Marketing",
-  "App Development",
 ];
 
 // IMPORTANT: every `id` below must be different. Two cards with the same id
@@ -476,9 +478,10 @@ const PROJECTS: Project[] = [
     title: "Nakshathra Gold and Diamonds",
     description: "An e-commerce portal to get all the items of Nakshathra's collection online.",
     category: "Digital Marketing",
-    image: "/images/Mobile App Logo/Nakshathra E-com.jpeg",
+    image: "/images/logos/Nakshathra_Hrms.png",
     imageAlt: "Nakshathra Gold and Diamonds logo",
     overlayTone: "dark",
+    bgColor: "#B87B04",
     year: "2025",
   },
   {
@@ -490,8 +493,85 @@ const PROJECTS: Project[] = [
     image: "/images/Dm/Briyani House.jpeg",
     imageAlt: "Briyani House logo",
     overlayTone: "light",
+    bgColor: "#000000",
     href: "https://example.com",
     year: "2026",
+  },
+  {
+    id: "mirqas",
+    title: "Mirqas",
+    description:
+      "Discover premium fragrances and enjoy a seamless shopping experience with Mirqas Perfumes.",
+    category: "Web Development",
+    image: "/images/logos/mirqas.png",
+    imageAlt: "Mirqas logo",
+    overlayTone: "dark",
+    bgColor: "#fffdfd",
+    year: "2026",
+  },
+  {
+    id: "Hawkeye-vision",
+    title: "Hawkeye vision",
+    // TODO: replace this with the real description for Hawkeye vision
+    description:
+      "Hawkeye Vision offers CCTV cameras, surveillance systems, access control, and security services.",
+    category: "Web Development",
+    image: "/images/Web Logo/Hawkeye vision.jpeg",
+    imageAlt: "Hawkeye vision logo",
+    overlayTone: "dark",
+    bgColor: "#fffdfd",
+    year: "2026",
+  },
+  {
+    id: "viyodha",
+    title: "Viyodha",
+    // TODO: replace this with the real description for Viyodha
+    description:
+      "Discover a beautiful collection of elegant and trendy women’s wear at Izha, bringing together style, comfort, and quality for every occasion.",
+    category: "Web Development",
+    image: "/images/Web Logo/viyodha.jpeg",
+    imageAlt: "Viyodha logo",
+    overlayTone: "dark",
+    bgColor: "#fffdfd",
+    year: "2026",
+  },
+  {
+    id: "hubzone",
+    title: "Hub Zone",
+    // TODO: replace this with the real description for Hub Zone
+    description:
+      "Discover a beautiful collection of elegant and trendy women’s wear at Izha, bringing together style, comfort, and quality for every occasion.",
+    category: "Web Development",
+    image: "/images/Web Logo/hubzone.jpeg",
+    imageAlt: "Hub Zone logo",
+    overlayTone: "dark",
+    bgColor: "#fffdfd",
+    year: "2026",
+  },
+  {
+    id: "imaans",
+    title: "Imaans",
+    // TODO: replace this with the real description for Imaans
+    description:
+      "Discover a beautiful collection of elegant and trendy women’s wear at Izha, bringing together style, comfort, and quality for every occasion.",
+    category: "Web Development",
+    image: "/images/Web Logo/imaans.jpeg",
+    imageAlt: "Imaans logo",
+    overlayTone: "light", // FIXED: dark green background needs light text
+    bgColor: "#03180c",
+    year: "2026",
+  },
+  {
+    id: "izha designs",
+    title: "Izha Designs",
+    description:
+      "Discover a beautiful collection of elegant and trendy women’s wear at Izha, bringing together style, comfort, and quality for every occasion.",
+    category: "Web Development",
+    image: "/images/Web Logo/izha.png",
+    imageAlt: "Izha Designs logo", // FIXED: was "mirqas logo"
+    overlayTone: "dark",
+    bgColor: "#ff89a1",
+    year: "2025",
   },
   {
     id: "Caior",
@@ -499,9 +579,10 @@ const PROJECTS: Project[] = [
     description:
       "Designs beautiful, functional interiors that turn your space into a home you love.",
     category: "Digital Marketing",
-    image: "/images/Dm/caior.jpeg",
+    image: "/images/logos/caior.png",
     imageAlt: "Caior logo",
     overlayTone: "dark",
+    bgColor: "#F8F7F4",
     year: "2025",
   },
   {
@@ -510,9 +591,10 @@ const PROJECTS: Project[] = [
     description:
       "Helps you protect and grow your finances with the right financial and insurance solutions.",
     category: "Digital Marketing",
-    image: "/images/Dm/credtree.png",
+    image: "/images/logos/credtree.png",
     imageAlt: "Credtree logo",
-    overlayTone: "light",
+    overlayTone: "dark",
+    bgColor: "#FFFFFF",
     year: "2026",
   },
   {
@@ -521,9 +603,10 @@ const PROJECTS: Project[] = [
     description:
       "Builds practical skills and career-ready knowledge through focused, quality training.",
     category: "Digital Marketing",
-    image: "/images/Dm/EGL.jpg",
+    image: "/images/logos/EGL.png",
     imageAlt: "EGLeran logo",
     overlayTone: "dark",
+    bgColor: "#FFFFFF",
     year: "2025",
   },
   {
@@ -532,9 +615,10 @@ const PROJECTS: Project[] = [
     description:
       "Offers timeless gold and diamond jewellery crafted for life’s most precious moments.",
     category: "Digital Marketing",
-    image: "/images/Dm/Fira.jpeg",
+    image: "/images/logos/Fira.png",
     imageAlt: "Fira logo",
     overlayTone: "light",
+    bgColor: "#643C5F",
     href: "https://example.com", // replace with your project URL
     year: "2026",
   },
@@ -544,9 +628,10 @@ const PROJECTS: Project[] = [
     description:
       "Offers stylish, comfortable eyewear that helps you see clearly and look great.",
     category: "Digital Marketing",
-    image: "/images/Dm/JS Glasses.jpeg",
+    image: "/images/logos/JS_Glasses.png",
     imageAlt: "Js Glasses logo",
     overlayTone: "dark",
+    bgColor: "#FFFFFF",
     year: "2025",
   },
   {
@@ -554,9 +639,10 @@ const PROJECTS: Project[] = [
     title: "Kesker",
     description: "Gives your car a showroom-fresh shine with professional detailing and protection services.",
     category: "Digital Marketing",
-    image: "/images/Dm/kesker .jpeg",
+    image: "/images/logos/kesker.png",
     imageAlt: "Kesker logo",
-    overlayTone: "light",
+    overlayTone: "dark",
+    bgColor: "#FFFFFF",
     year: "2026",
   },
   {
@@ -564,9 +650,10 @@ const PROJECTS: Project[] = [
     title: "le & lee",
     description: "Your destination for the latest bikes and a smooth buying experience.",
     category: "Digital Marketing",
-    image: "/images/Dm/le & lee.png",
+    image: "/images/logos/lee.png",
     imageAlt: "le & lee logo",
     overlayTone: "dark",
+    bgColor: "#F5F5F0",
     year: "2025",
   },
   {
@@ -574,9 +661,10 @@ const PROJECTS: Project[] = [
     title: "MK Distributors",
     description: "Supplies quality A4 paper reliably for offices, schools, and print shops.",
     category: "Digital Marketing",
-    image: "/images/Dm/MK.jpeg",
+    image: "/images/logos/MK.png",
     imageAlt: "MK Distributors logo",
     overlayTone: "dark",
+    bgColor: "#B6C8D4",
     year: "2025",
   },
   {
@@ -584,9 +672,10 @@ const PROJECTS: Project[] = [
     title: "Sweero delights",
     description: " Brings you delicious, freshly made treats that make every moment sweeter.",
     category: "Digital Marketing",
-    image: "/images/Dm/sweero_logo_bg.png",
+    image: "/images/logos/sweero.png",
     imageAlt: "Sweero delights logo",
-    overlayTone: "light",
+    overlayTone: "dark",
+    bgColor: "#FAE2A9",
     year: "2026",
   },
   {
@@ -594,9 +683,10 @@ const PROJECTS: Project[] = [
     title: "Tantra",
     description: "Builds strong, well-planned spaces with quality construction you can depend on.",
     category: "Digital Marketing",
-    image: "/images/Dm/Tantra.jpeg",
+    image: "/images/logos/Tantra.png",
     imageAlt: "Tantra logo",
     overlayTone: "dark",
+    bgColor: "#F4F4F6",
     year: "2024",
   },
   {
@@ -604,9 +694,10 @@ const PROJECTS: Project[] = [
     title: "Trav Around",
     description: "Plans smooth, memorable trips so you can enjoy every destination without the stress.",
     category: "Digital Marketing",
-    image: "/images/Dm/Trav Around.jpeg",
+    image: "/images/logos/Trav_Around.png",
     imageAlt: "Trav Around logo",
-    overlayTone: "light",
+    overlayTone: "dark",
+    bgColor: "#FFFFFF",
     year: "2025",
   },
   {
@@ -614,9 +705,10 @@ const PROJECTS: Project[] = [
     title: "YDU",
     description: "Takes care of your accounting and bookkeeping needs so you can focus on growing your business.",
     category: "Digital Marketing",
-    image: "/images/Dm/YDU.jpeg",
+    image: "/images/logos/YDU.png",
     imageAlt: "YDU logo",
     overlayTone: "dark",
+    bgColor: "#F2F0F7",
     year: "2026",
   },
   {
@@ -625,9 +717,10 @@ const PROJECTS: Project[] = [
     title: "Nakshathra",
     description: "An e-commerce portal to get all the items of Nakshathra's collection online.",
     category: "App Development",
-    image: "/images/Mobile App Logo/Nakshathra E-com.jpeg",
+    image: "/images/logos/Nakshathra_Hrms.png",
     imageAlt: "Nakshathra logo",
     overlayTone: "dark",
+    bgColor: "#B87B04",
     year: "2025",
   },
   {
@@ -635,9 +728,10 @@ const PROJECTS: Project[] = [
     title: "Zara Design",
     description: "Designs elegant, comfortable interiors tailored to the way you live.",
     category: "Digital Marketing",
-    image: "/images/Dm/ZaraDesign.png-.png",
+    image: "/images/logos/ZaraDesign.png",
     imageAlt: "Zara Design logo",
-    overlayTone: "light",
+    overlayTone: "dark",
+    bgColor: "#FFFFFF",
     year: "2024",
   },
   {
@@ -645,9 +739,10 @@ const PROJECTS: Project[] = [
     title: "Curefully",
     description: "Just like ordering food through Swiggy, order your medicines to be delivered to your doorstep.",
     category: "App Development",
-    image: "/images/Mobile App Logo/curefully.jpeg",
+    image: "/images/logos/curefully.png",
     imageAlt: "Curefully logo",
-    overlayTone: "light",
+    overlayTone: "dark",
+    bgColor: "#FFFFFF",
     year: "2026",
   },
   {
@@ -655,9 +750,10 @@ const PROJECTS: Project[] = [
     title: "Gabby Talk",
     description: " An application where you can converse, share and always feel like you have a friend by your side.",
     category: "App Development",
-    image: "/images/Mobile App Logo/gabby talk.jpeg",
+    image: "/images/logos/gabby_talk.png",
     imageAlt: "Gabby Talk logo",
     overlayTone: "dark",
+    bgColor: "#F7F7F7",
     year: "2025",
   },
   {
@@ -665,9 +761,10 @@ const PROJECTS: Project[] = [
     title: "Heartmate",
     description: "To help individuals find companionship with those whom they share a special bond.",
     category: "App Development",
-    image: "/images/Mobile App Logo/heartmate.jpeg",
+    image: "/images/logos/heartmate.png",
     imageAlt: "Heartmate logo",
     overlayTone: "dark",
+    bgColor: "#FCFCFC",
     year: "2026",
   },
   {
@@ -675,9 +772,10 @@ const PROJECTS: Project[] = [
     title: "Kerala Institute Sales",
     description: "Makes it easier for the institute's sales team to manage leads, follow-ups, and admissions with ease using their smartphones.",
     category: "App Development",
-    image: "/images/Mobile App Logo/kerala institute sales app.jpeg",
+    image: "/images/logos/kerala_institute_sales_app.png",
     imageAlt: "Kerala Institute Sales logo",
-    overlayTone: "light",
+    overlayTone: "dark",
+    bgColor: "#FFFFFF",
     year: "2025",
   },
   {
@@ -685,9 +783,10 @@ const PROJECTS: Project[] = [
     title: "Nakshathra Scheme",
     description: "A great way for the customers to save money in convenient installments towards their purchases.",
     category: "App Development",
-    image: "/images/Mobile App Logo/Nakshathra Scheme.jpeg",
+    image: "/images/logos/Nakshathra_Hrms.png",
     imageAlt: "Nakshathra Scheme logo",
     overlayTone: "dark",
+    bgColor: "#B87B04",
     year: "2025",
   },
   {
@@ -695,9 +794,10 @@ const PROJECTS: Project[] = [
     title: "Nakshathra",
     description: "An app where you can assign, monitor and complete all tasks within the team.",
     category: "App Development",
-    image: "/images/Mobile App Logo/Nakshathra Task.jpeg",
+    image: "/images/logos/Nakshathra_Hrms.png",
     imageAlt: "Nakshathra Task logo",
     overlayTone: "dark",
+    bgColor: "#B87B04",
     year: "2024",
   },
   {
@@ -705,9 +805,10 @@ const PROJECTS: Project[] = [
     title: "suchiGo",
     description: "An easy and efficient way to make waste collection and disposal process easy for your house.",
     category: "App Development",
-    image: "/images/Mobile App Logo/suchiGo.jpeg",
+    image: "/images/logos/suchiGo.png",
     imageAlt: "suchiGo logo",
-    overlayTone: "light",
+    overlayTone: "dark",
+    bgColor: "#F7F7F7",
     year: "2026",
   },
   {
@@ -715,9 +816,10 @@ const PROJECTS: Project[] = [
     title: "AZB",
     description: "Your one-stop store for everyday needs, with quality products at one place.",
     category: "Web Development",
-    image: "/images/Web Logo/AZB.jpeg",
+    image: "/images/logos/AZB.png",
     imageAlt: "AZB logo",
     overlayTone: "light",
+    bgColor: "#000000",
     year: "2025",
   },
   {
@@ -725,9 +827,10 @@ const PROJECTS: Project[] = [
     title: "Devamshi",
     description: "A boutique with custom-style outfits and fashion made to fit your taste.",
     category: "Web Development",
-    image: "/images/Web Logo/Devamshi.jpeg",
+    image: "/images/logos/Devamshi.png",
     imageAlt: "Devamshi logo",
-    overlayTone: "light",
+    overlayTone: "dark",
+    bgColor: "#FFFFFF",
     year: "2025",
   },
   {
@@ -735,9 +838,10 @@ const PROJECTS: Project[] = [
     title: "Elaamy",
     description: "Offers premium stationery and thoughtful gifts that make every occasion feel special.",
     category: "Web Development",
-    image: "/images/Web Logo/Elaamy.jpeg",
+    image: "/images/logos/Elaamy.png",
     imageAlt: "Elaamy logo",
     overlayTone: "dark",
+    bgColor: "#FFFFFF",
     year: "2024",
   },
   {
@@ -745,9 +849,10 @@ const PROJECTS: Project[] = [
     title: "Ethenzaa",
     description: "Your go-to online destination for stylish, comfortable clothing for every occasion.",
     category: "Web Development",
-    image: "/images/Web Logo/Ethenzaa.jpeg",
+    image: "/images/logos/Ethenzaa.png",
     imageAlt: "Ethenzaa logo",
-    overlayTone: "dark",
+    overlayTone: "light",
+    bgColor: "#8A1F31",
     year: "2026",
   },
   {
@@ -755,9 +860,10 @@ const PROJECTS: Project[] = [
     title: "Falvor House",
     description: "Delivers tasty, quality food items made to bring real flavor to your table.",
     category: "Web Development",
-    image: "/images/Web Logo/Falvor House.jpeg",
+    image: "/images/logos/Falvor_House.png",
     imageAlt: "Falvor House logo",
     overlayTone: "dark",
+    bgColor: "#FFFFFF",
     year: "2025",
   },
   {
@@ -765,9 +871,10 @@ const PROJECTS: Project[] = [
     title: "Nakshathra Hrms",
     description: "A comprehensive management system to keep Nakshathra's business working efficiently.",
     category: "Web Development",
-    image: "/images/Mobile App Logo/Nakshathra Hrms.jpeg",
+    image: "/images/logos/Nakshathra_Hrms.png",
     imageAlt: "Nakshathra Hrms logo",
-    overlayTone: "light",
+    overlayTone: "dark",
+    bgColor: "#B87B04",
     year: "2026",
   },
   {
@@ -775,9 +882,10 @@ const PROJECTS: Project[] = [
     title: "Indoor petals",
     description: "Brings fresh greenery into your home with healthy indoor plants and easy gardening solutions.",
     category: "Web Development",
-    image: "/images/Web Logo/Indoor petals.PNG",
+    image: "/images/logos/Indoor_petals.png",
     imageAlt: "Indoor petals logo",
-    overlayTone: "light",
+    overlayTone: "dark",
+    bgColor: "#FFFFFF",
     year: "2026",
   },
   {
@@ -785,9 +893,10 @@ const PROJECTS: Project[] = [
     title: "Miorah",
     description: "Offers elegant jewellery designed to add shine and style to every moment.",
     category: "Web Development",
-    image: "/images/Web Logo/Miorah.jpeg",
+    image: "/images/logos/Miorah.png",
     imageAlt: "Miorah logo",
     overlayTone: "dark",
+    bgColor: "#FFFFFF",
     year: "2025",
   },
   {
@@ -795,9 +904,10 @@ const PROJECTS: Project[] = [
     title: "Safe Zone",
     description: "Supports a healthier, cleaner lifestyle with trusted wellness and personal hygiene products.",
     category: "Web Development",
-    image: "/images/Web Logo/Safe Zone.jpeg",
+    image: "/images/logos/Safe_Zone.png",
     imageAlt: "Safe Zone logo",
-    overlayTone: "light",
+    overlayTone: "dark",
+    bgColor: "#FEFEFE",
     year: "2024",
   },
   {
@@ -805,9 +915,10 @@ const PROJECTS: Project[] = [
     title: "Smylgiftings",
     description: "Makes everyday writing and gifting more cheerful with cute and useful stationery.",
     category: "Web Development",
-    image: "/images/Web Logo/Smylgiftings.jpeg",
+    image: "/images/logos/Smylgiftings.png",
     imageAlt: "Smylgiftings logo",
     overlayTone: "dark",
+    bgColor: "#FFFFFF",
     year: "2026",
   },
   {
@@ -815,9 +926,10 @@ const PROJECTS: Project[] = [
     title: "TheLAMPSYco",
     description: "Brings you beauty and cosmetic products that help you look and feel your best.",
     category: "Web Development",
-    image: "/images/Web Logo/TheLAMPSYco.jpeg",
+    image: "/images/logos/LAMPSY.png",
     imageAlt: "TheLAMPSYco logo",
     overlayTone: "light",
+    bgColor: "#231F20",
     year: "2025",
   },
   {
@@ -825,9 +937,10 @@ const PROJECTS: Project[] = [
     title: "Uruvi Designs",
     description: "Presents unique, trend-forward clothing designs for people who love to stand out.",
     category: "Web Development",
-    image: "/images/Web Logo/Uruvi Designs.jpeg",
+    image: "/images/logos/Uruvi.png",
     imageAlt: "Uruvi Designs logo",
     overlayTone: "dark",
+    bgColor: "#FFFFFF",
     year: "2024",
   },
   {
@@ -835,9 +948,10 @@ const PROJECTS: Project[] = [
     title: "Nila",
     description: "Serves wholesome, good-quality food products made with care.",
     category: "Web Development",
-    image: "/images/Web Logo/Nila.jpeg",
+    image: "/images/logos/Nila.png",
     imageAlt: "Nila logo",
-    overlayTone: "light",
+    overlayTone: "dark",
+    bgColor: "#F8EFDF",
     year: "2026",
   },
   {
@@ -845,9 +959,43 @@ const PROJECTS: Project[] = [
     title: "Punyam",
     description: "Gives you astrology guidance to help you make confident decisions in life.",
     category: "Web Development",
-    image: "/images/Web Logo/Punyam.jpeg",
+    image: "/images/logos/Punyam.png",
     imageAlt: "Punyam logo",
     overlayTone: "dark",
+    bgColor: "#FFFFFF",
+    year: "2025",
+  },
+  {
+    id: "Charmika",
+    title: "Charmika",
+    description: "Exquisite jewellery designs crafted with precision and elegance for life's special celebrations.",
+    category: "Digital Marketing",
+    image: "/images/logos/Charmika.png",
+    imageAlt: "Charmika logo",
+    overlayTone: "dark",
+    bgColor: "#FFFFFF",
+    year: "2025",
+  },
+  {
+    id: "dhavam",
+    title: "Dhavam Spices",
+    description: "Farm-Fresh Spice E-commerce Platform offering quality spices sourced directly from local farms.",
+    category: "Web Development",
+    image: "/images/logos/dhavam.png",
+    imageAlt: "Dhavam Spices logo",
+    overlayTone: "dark",
+    bgColor: "#FFFFFF",
+    year: "2026",
+  },
+  {
+    id: "vivide",
+    title: "Vivide",
+    description: "Creative digital marketing and brand promotion helping modern brands stand out and grow.",
+    category: "Digital Marketing",
+    image: "/images/logos/vivide.png",
+    imageAlt: "Vivide logo",
+    overlayTone: "dark",
+    bgColor: "#FFFFFF",
     year: "2025",
   },
 ];
@@ -940,7 +1088,8 @@ function useRevealOnce<T extends HTMLElement>() {
 const expandedRules = (trigger: string) => `
 ${trigger}{transform:translate3d(0,-6px,0)}
 ${trigger} .works-project-image{height:100%}
-${trigger} .works-project-img{padding:1rem 1rem 5.75rem}
+${trigger} .works-project-img{padding:.75rem .75rem 4.5rem}
+@media (min-width:640px){${trigger} .works-project-img{padding:1rem 1rem 5.75rem}}
 ${trigger} .works-project-scrim{opacity:1}
 ${trigger} .works-project-info{opacity:0}
 ${trigger} .works-project-overlay{opacity:1;transform:none;transition-delay:.14s,.1s}`;
@@ -952,24 +1101,24 @@ const PROJECTS_CSS = `
   transition:transform .5s cubic-bezier(.22,1,.36,1),opacity .5s ease-out}
 @media (max-width:767px){.works-project-reveal{--s0:.93;--y0:12px}}
 
-.works-project-card{position:relative;display:block;height:24rem;border-radius:16px;overflow:hidden;
+.works-project-card{position:relative;display:block;height:19rem;border-radius:14px;overflow:hidden;
   isolation:isolate;background:#0d0d0d;color:#fff;cursor:pointer;outline:none;
   -webkit-tap-highlight-color:transparent;touch-action:manipulation;transform:translate3d(0,0,0);
   transition:transform .55s cubic-bezier(.65,0,.35,1)}
-@media (min-width:640px){.works-project-card{height:26rem}}
+@media (min-width:640px){.works-project-card{height:26rem;border-radius:16px}}
 @media (min-width:1024px){.works-project-card{height:28rem}}
 .works-project-card:focus-visible{box-shadow:0 0 0 2px #000,0 0 0 4px #fff}
 .works-project-info{position:absolute;inset:52% 0 0 0;z-index:0;overflow:hidden;
-  padding:1rem 1.25rem;background:#0d0d0d;transition:opacity .3s ease}
+  padding:.75rem .85rem;background:#0d0d0d;transition:opacity .3s ease}
 @media (min-width:640px){.works-project-info{padding:1.25rem 1.5rem}}
 .works-project-image{position:absolute;inset:0 0 auto 0;z-index:1;height:52%;overflow:hidden;
-  background:#fff;transition:height .56s cubic-bezier(.65,0,.35,1)}
+  transition:height .56s cubic-bezier(.65,0,.35,1)}
 .works-project-img{object-fit:contain;object-position:center;
   transition:padding .56s cubic-bezier(.65,0,.35,1)}
 .works-project-scrim{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .45s ease}
 .works-project-scrim[data-tone="light"]{background:linear-gradient(to top,rgba(0,0,0,.8),rgba(0,0,0,.28) 28%,transparent 52%)}
 .works-project-scrim[data-tone="dark"]{background:linear-gradient(to top,rgba(255,255,255,.85),rgba(255,255,255,.3) 28%,transparent 52%)}
-.works-project-overlay{position:absolute;inset:auto 0 0 0;z-index:2;padding:1.25rem;opacity:0;
+.works-project-overlay{position:absolute;inset:auto 0 0 0;z-index:2;padding:.85rem;opacity:0;
   transform:translateY(14px);pointer-events:none;
   transition:opacity .3s ease,transform .5s cubic-bezier(.22,1,.36,1)}
 @media (min-width:640px){.works-project-overlay{padding:1.5rem}}
@@ -1045,42 +1194,55 @@ function ProjectCard({ project }: { project: Project }) {
     <>
       {/* Default information panel (the single accessible copy of the text) */}
       <div className="works-project-info">
-        <span className="flex items-center justify-between text-[10px] font-medium uppercase tracking-[0.16em] text-neutral-500 sm:text-[11px]">
+        <span className="flex items-center justify-between text-[9px] font-medium uppercase tracking-[0.12em] text-neutral-500 sm:text-[11px] sm:tracking-[0.16em]">
           <span>{project.category}</span>
           {project.year && <span>{project.year}</span>}
         </span>
-        <span className="mt-2 block text-xl font-medium leading-tight tracking-[-0.02em] text-white sm:mt-3 sm:text-[1.375rem] md:text-2xl">
+        <span className="mt-1 block text-sm font-medium leading-tight tracking-[-0.01em] text-white sm:mt-3 sm:text-[1.375rem] md:text-2xl">
           {project.title}
         </span>
-        <span className="mt-2 block line-clamp-3 text-[13px] leading-relaxed text-neutral-400 sm:text-sm">
+        <span className="mt-1 block line-clamp-2 text-[11px] leading-relaxed text-neutral-400 sm:mt-2 sm:line-clamp-3 sm:text-sm">
           {project.description}
         </span>
       </div>
 
-      {/* Image: top half by default, expands to the whole card and fits inside it */}
-      <div className="works-project-image">
+      {/* Image: top half by default, background = the logo's own background colour */}
+      <div
+        className="works-project-image"
+        style={{ backgroundColor: project.bgColor }}
+      >
         <Image
           src={src}
           alt={project.imageAlt}
           fill
-          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 50vw"
           onError={() => setHasImageFailed(true)}
           unoptimized={
             src.startsWith("data:") || src.startsWith("http") || src.endsWith(".svg")
           }
-          className="works-project-img object-contain p-4"
+          className="works-project-img object-contain p-2 sm:p-4"
         />
-        <span className="works-project-scrim" data-tone={project.overlayTone} aria-hidden="true" />
+        <span
+          className="works-project-scrim"
+          data-tone={project.overlayTone}
+          style={{
+            background:
+              project.overlayTone === "light"
+                ? "linear-gradient(to top, rgba(0,0,0,.85), rgba(0,0,0,.3) 28%, transparent 52%)"
+                : `linear-gradient(to top, ${project.bgColor} 0%, ${project.bgColor}d9 28%, transparent 52%)`,
+          }}
+          aria-hidden="true"
+        />
       </div>
 
       {/* Overlay copy shown on expand (decorative duplicate, hidden from screen readers) */}
       <div className="works-project-overlay" data-tone={project.overlayTone} aria-hidden="true">
-        <span className="flex items-end justify-between gap-4">
+        <span className="flex items-end justify-between gap-2 sm:gap-4">
           <span className="block">
-            <span className="block text-xl font-medium leading-tight tracking-[-0.02em] sm:text-2xl">
+            <span className="block text-sm font-medium leading-tight tracking-[-0.01em] sm:text-2xl">
               {project.title}
             </span>
-            <span className="mt-2 block line-clamp-2 text-[13px] leading-relaxed opacity-80 sm:text-sm">
+            <span className="mt-1 block line-clamp-2 text-[11px] leading-relaxed opacity-80 sm:mt-2 sm:text-sm">
               {project.description}
             </span>
           </span>
@@ -1233,9 +1395,9 @@ function ProjectsShowcase() {
           {displayedCategory === "All Projects" ? "" : ` in ${displayedCategory}`}
         </p>
 
-        {/* Project grid: 1 column on phones, 2 from 640px, 3 from 1024px */}
+        {/* Project grid: 2 columns on phones, 2 from 640px, 3 from 1024px */}
         <div
-          className={`works-projects-grid mt-8 grid min-h-[24rem] grid-cols-1 gap-x-5 gap-y-8 transition duration-200 ease-out motion-reduce:transition-none sm:mt-10 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-12 ${
+          className={`works-projects-grid mt-6 grid min-h-[24rem] grid-cols-2 gap-x-3 gap-y-5 transition duration-200 ease-out motion-reduce:transition-none sm:mt-10 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-12 ${
             isSwapping ? "translate-y-2 opacity-0" : "translate-y-0 opacity-100"
           }`}
         >

@@ -1,13 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Bricolage_Grotesque, DM_Sans } from "next/font/google";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { FaWhatsapp } from "react-icons/fa";
-
-const display = Bricolage_Grotesque({ subsets: ["latin"], weight: ["400", "600", "700", "800"], variable: "--font-display" });
-const body = DM_Sans({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-body" });
+import { display, body } from "./fonts";
 
 /* Palette
    #222831 base   #31363F surface   #76ABAE accent   #EEEEEE light */

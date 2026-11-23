@@ -1,347 +1,279 @@
 "use client";
-import React, { useCallback, useEffect, useRef } from "react";
 
-/* ---------- Data: replace images/names with your real team ---------- */
-type Member = { name: string; role: string; image: string };
+import React, { memo, useMemo, useState } from "react";
+import { Search, UserX, X } from "lucide-react";
 
-// const MANAGER = {
-//   name: "Sujin P M",
-//   role: "Founder & CEO",
-//   image: "/team/manager.jpg",
-//   quotes: [
-//     "We don't just build projects, we build trust that lasts.",
-//     "Great results come from a team that genuinely cares.",
-//   ],
-// };
+/* ========================================================================== */
+/* 1. TEAM MEMBERS DATA                                                       */
+/* Change names, roles, departments or `image` (path or full https:// URL).   */
+/* ========================================================================== */
 
-const TEAM_QUOTE = "Behind every successful project is a team that refuses to settle.";
+export type Department =
+  | "All"
+  | "Engineering"
+  | "Design"
+  | "Marketing"
+  | "Business"
+  | "Operations"
+  | "Content Creator"
+  | "QA";
 
-const TEAM: Member[] = [
-  { name: "Meera M", role: "sr.Graphic Designer", image: "/team/PHOTO-ONE/PHOTO ONE/photos-02.jpg" },
-  { name: "Alpha Nelson", role: "Graphic Designer", image: "team/PHOTO-ONE/PHOTO ONE/photos-12.jpg" },
-  { name: "Arya P U", role: "Graphic Designer", image: "team/PHOTO-ONE/PHOTO ONE/photos-11.jpg" },
-  // { name: "Arjun Shaji", role: "Digital Marketing Executive", image: "team/PHOTO-ONE/PHOTO ONE/photos-02.jpg" },
-  { name: "Aslam K M", role: "Flutter Developer", image: "team/PHOTO-ONE/PHOTO ONE/photos-10.jpg" },
-  { name: "Muhammed Nabeel", role: "Python Developer", image: "team/PHOTO-ONE/PHOTO ONE/photos-18.jpg" },
-  { name: "Silpa Raji", role: "Content Creator", image: "team/PHOTO-ONE/PHOTO ONE/photos-21.jpg" },
-  { name: "Gayathri Harsha M", role: "Business Development Executive", image: "team/PHOTO-ONE/PHOTO ONE/photos-07.jpg" },
-  { name: "Karishma H.K", role: "Business Development Executive", image: "team/PHOTO-ONE/PHOTO ONE/photos-03.jpg" },
-  { name: "Nidheesh Krishna N", role: "Flutter Developer", image: "team/PHOTO-ONE/PHOTO ONE/photos-05.jpg" },
-  { name: "Bijin Mohan", role: "Business Development Manager", image: "team/PHOTO-ONE/PHOTO ONE/photos-08.jpg" },
-  { name: "Raina Ranjan", role: "Software Tester", image: "team/PHOTO-ONE/PHOTO ONE/photos-19.jpg" },
-  { name: "Nahla Nasarin K.N", role: "Operation Executive", image: "team/PHOTO-ONE/PHOTO ONE/photos-14.jpg" },
-  { name: "J Mahadev", role: "Operation Executive", image: "team/PHOTO-ONE/PHOTO ONE/photos-04.jpg" },
-  { name: "Sonamol C M", role: "Backend Developer", image: "team/PHOTO-ONE/PHOTO ONE/photos-25.jpg" },
-  // { name: "Nicy K kabir", role: "Flutter Developer", image: "team/PHOTO-ONE/PHOTO ONE/photos-02.jpg" },
-  { name: "Shilpa P R", role: "Software Tester", image: "team/PHOTO-ONE/PHOTO ONE/photos-23.jpg" },
-  // { name: "Jabzeena M A", role: "Python Developer", image: "team/PHOTO-ONE/PHOTO ONE/photos-02.jpg" },
-  // { name: "Jemson Jacob", role: "Flutter Developer", image: "team/PHOTO-ONE/PHOTO ONE/photos-02.jpg" },
-  { name: "Alen Shaji", role: "Operations Assistant", image: "team/PHOTO-ONE/PHOTO ONE/photos-13.jpg" },
-  // { name: "Soji Kurian", role: "Digital Marketing Executive", image: "team/PHOTO-ONE/PHOTO ONE/photos-02.jpg" },
-  // { name: "Tony", role: "Digital Marketing Executive", image: "team/PHOTO-ONE/PHOTO ONE/photos-02.jpg" },
-  { name: "Shyamil K V", role: "Accountant", image: "team/PHOTO-ONE/PHOTO ONE/photos-22.jpg" },
-  { name: "Nandhana", role: "Digital Marketing", image: "team/PHOTO-ONE/PHOTO ONE/photos-15.jpg" },
+export type TeamMember = {
+  id: string;
+  name: string;
+  role: string;
+  department: Exclude<Department, "All">;
+  /** Image path or URL. Use p("02") for /team/photo-one/photos-02.jpg */
+  image: string;
+};
+
+const DEPARTMENTS: Department[] = [
+  "All",
+  "Engineering",
+  "Design",
+  "Marketing",
+  "Business",
+  "Operations",
+  "Content Creator",
+  "QA",
 ];
 
-/* ---------- Components ---------- */
-// const ManagerSection: React.FC = () => (
-//   <section className="team-manager">
-//     <img className="team-manager__photo" src={MANAGER.image} alt={MANAGER.name} />
-//     <div className="team-manager__body">
-//       {MANAGER.quotes.map((q) => (
-//         <blockquote key={q}>“{q}”</blockquote>
-//       ))}
-//       <p className="team-manager__name">{MANAGER.name}</p>
-//       <p className="team-manager__role">{MANAGER.role}</p>
-//     </div>
-//   </section>
-// );
+const p = (n: string) => `/team/photo-one/photos-${n}.jpg`;
 
-const QuoteSection: React.FC = () => (
-  <section className="team-quote">
-    <h2>Our Team</h2>
-    <p>{TEAM_QUOTE}</p>
-  </section>
-);
+const TEAM_MEMBERS: TeamMember[] = [
+  { id: "bijin-mohan", name: "Bijin Mohan", role: "Business Development Manager", department: "Business", image: p("08") },
+  { id: "sayooj-deepak", name: "Sayooj Deepak M", role: "Digital Marketing Manager", department: "Marketing", image: p("00") },
+  { id: "meera-m", name: "Meera M", role: "Sr. Graphic Designer", department: "Design", image: p("02") },
+  { id: "shyamil-k-v", name: "Shyamil K V", role: "Accountant & Finance", department: "Business", image: p("22") },
+  { id: "nidheesh-krishna", name: "Nidheesh Krishna N", role: "Flutter Developer", department: "Engineering", image: p("16") },
+  { id: "silpa-raji", name: "Silpa Raji", role: "Content Creator", department: "Content Creator", image: p("21") },
+  { id: "muhammed-nabeel", name: "Muhammed Nabeel", role: "Python Developer", department: "Engineering", image: p("18") },
+  { id: "aslam-k-m", name: "Aslam K M", role: "Flutter Developer", department: "Engineering", image: p("10") },
+  { id: "jaffar", name: "Jaffar", role: "Odoo Developer", department: "Engineering", image: p("29") },
+  { id: "alen-shaji", name: "Alen Shaji", role: "Operations Assistant", department: "Operations", image: p("13") },
+  // BUSINESS
+  { id: "gayathri-harsha", name: "Gayathri Harsha M", role: "Business Development Executive", department: "Business", image: p("07") },
+  { id: "karishma-h-k", name: "Karishma H.K", role: "Business Development Executive", department: "Business", image: p("03") },
+  { id: "sayed-ali", name: "Sayed Ali", role: "Digital Marketing Executive", department: "Business", image: p("20") },
+  { id: "tony", name: "Tony", role: "Business Development Executive", department: "Business", image: p("24") },
+  // DESIGN
+  { id: "alpha-nelson", name: "Alpha Nelson", role: "Graphic Designer", department: "Design", image: p("12") },
+  { id: "arya-p-u", name: "Arya P U", role: "Graphic Designer", department: "Design", image: p("11") },
+  //odoo
+  { id: "akhil-sabu", name: "Akhil Sabu", role: "Odoo Developer", department: "Engineering", image: p("01") },
+  { id: "adithya", name: "Adithya", role: "Odoo Functional Consultant", department: "Engineering", image: p("26") },
+  { id: "abeya", name: "Abeya", role: "Odoo Developer", department: "Engineering", image: p("27") },
+  { id: "sinan", name: "Sinan", role: "Odoo Developer", department: "Engineering", image: p("28") },
+  // ENGINEERING
+  { id: "sonamol-c-m", name: "Sonamol C M", role: "Backend Developer", department: "Engineering", image: p("25") },
+  { id: "jabzeena-m-a", name: "Jabzeena M A", role: "Python Developer", department: "Engineering", image: p("06") },
+  { id: "jemson-jacob", name: "Jemson Jacob", role: "Flutter Developer", department: "Engineering", image: p("05") },
+  { id: "nicy-K-kabir", name: "Nicy K kabir", role: "Flutter Developer", department: "Engineering", image: p("17") },
+  
+  // MARKETING
+  { id: "nandana", name: "Nandana", role: "Digital Marketing Executive", department: "Marketing", image: p("15") },
+  { id: "arjun-shaji", name: "Arjun Shaji", role: "Business Development Executive", department: "Marketing", image: p("00") },
+  { id: "aswathy-v", name: "Aswathy V", role: "Digital Marketing Executive", department: "Marketing", image: p("09") },
+  // OPERATIONS
+  { id: "nahla-nasarin", name: "Nahla Nasarin K.N", role: "Operations Executive", department: "Operations", image: p("14") },
+  { id: "j-mahadev", name: "J Mahadev", role: "Operations Executive", department: "Operations", image: p("04") },
+  // QA
+  { id: "raina-ranjan", name: "Raina Ranjan", role: "Software QA Tester", department: "QA", image: p("19") },
+  { id: "shilpa-p-r", name: "Shilpa P R", role: "Software QA Tester", department: "QA", image: p("23") },
+];
 
-const Card: React.FC<{ member: Member; index: number; hidden?: boolean }> = ({
+/* ========================================================================== */
+/* 2. CARD                                                                    */
+/* The image is always visible (no fade/blur waiting for onLoad), so it shows */
+/* up as soon as the browser has it. First 8 load immediately, rest lazily.   */
+/* ========================================================================== */
+
+const MemberCard = memo(function MemberCard({
   member,
-  index,
-  hidden,
-}) => (
-  <li
-    className={`team-card ${index % 2 === 0 ? "is-low" : "is-high"}`}
-    tabIndex={hidden ? -1 : 0}
-    aria-hidden={hidden}
-  >
-    <img src={member.image} alt={hidden ? "" : `${member.name}, ${member.role}`} loading="lazy" />
-    <div className="team-card__info">
-      <span className="team-card__role">{member.role}</span>
-      <span className="team-card__name">{member.name}</span>
-    </div>
-  </li>
-);
+  eager,
+}: {
+  member: TeamMember;
+  eager: boolean;
+}) {
+  const [failed, setFailed] = useState(false);
 
-const AUTO_SPEED = 50; // pixels per second
+  return (
+    <article className="group">
+      <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[28px] bg-[#1a1f29]">
+        {failed ? (
+          <div className="grid h-full w-full place-items-center text-5xl font-semibold text-white/25">
+            {member.name.charAt(0)}
+          </div>
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={member.image}
+            alt={member.name}
+            width={600}
+            height={800}
+            loading={eager ? "eager" : "lazy"}
+            fetchPriority={eager ? "high" : "auto"}
+            decoding="async"
+            onError={() => setFailed(true)}
+            className="h-full w-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-110"
+          />
+        )}
 
-const TeamStrip: React.FC = () => {
-  const scrollerRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLUListElement>(null);
-  const pos = useRef(0);               // float scroll position for smooth auto-scroll
-  const pausedUntil = useRef(0);       // timestamp until which auto-scroll is paused
-  const hovering = useRef(false);
+        {/* Department (Engineering, Design...) over the image, top right */}
+        <span className="pointer-events-none absolute right-3 top-3 rounded-full bg-black/65 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white">
+          {member.department}
+        </span>
+      </div>
 
-  const half = () => (trackRef.current ? trackRef.current.offsetWidth / 2 : 0);
+      {/* Name and job title below the image */}
+      <div className="px-1 pt-4">
+        <h3 className="text-lg font-semibold leading-snug text-white">
+          {member.name}
+        </h3>
+        <p className="mt-0.5 text-sm text-[#76ABAE]">{member.role}</p>
+      </div>
+    </article>
+  );
+});
 
-  const pauseFor = (ms: number) => {
-    pausedUntil.current = performance.now() + ms;
-  };
+/* ========================================================================== */
+/* 3. PAGE                                                                    */
+/* ========================================================================== */
 
-  /* Auto-scroll loop */
-  useEffect(() => {
-    const el = scrollerRef.current;
-    if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+export default function TeamPage() {
+  const [selectedDept, setSelectedDept] = useState<Department>("All");
+  const [searchQuery, setSearchQuery] = useState("");
 
-    let raf = 0;
-    let last = performance.now();
-    pos.current = el.scrollLeft;
-
-    const tick = (now: number) => {
-      const dt = (now - last) / 1000;
-      last = now;
-      if (!hovering.current && now > pausedUntil.current) {
-        // re-sync if the user scrolled manually or via the buttons
-        if (Math.abs(el.scrollLeft - pos.current) > 2) pos.current = el.scrollLeft;
-        pos.current += AUTO_SPEED * dt;
-        const h = half();
-        if (h && pos.current >= h) pos.current -= h; // seamless wrap
-        el.scrollLeft = pos.current;
-      }
-      raf = requestAnimationFrame(tick);
+  const deptCounts = useMemo(() => {
+    const counts: Record<Department, number> = {
+      All: TEAM_MEMBERS.length,
+      Engineering: 0,
+      Design: 0,
+      Marketing: 0,
+      Business: 0,
+      Operations: 0,
+      "Content Creator": 0,
+      QA: 0,
     };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    TEAM_MEMBERS.forEach((m) => {
+      counts[m.department] += 1;
+    });
+    return counts;
   }, []);
 
-  /* Back / Next buttons */
-  const slide = useCallback((dir: 1 | -1) => {
-    const el = scrollerRef.current;
-    const card = trackRef.current?.querySelector("li") as HTMLElement | null;
-    if (!el || !card) return;
-    const h = half();
-    // card width + gap, read from CSS so it stays correct at every screen size
-    const step = card.offsetWidth + parseFloat(getComputedStyle(card).marginRight || "0");
+  const filteredMembers = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    return TEAM_MEMBERS.filter((m) => {
+      const inDept = selectedDept === "All" || m.department === selectedDept;
+      const inSearch =
+        !q ||
+        m.name.toLowerCase().includes(q) ||
+        m.role.toLowerCase().includes(q) ||
+        m.department.toLowerCase().includes(q);
+      return inDept && inSearch;
+    });
+  }, [selectedDept, searchQuery]);
 
-    // jump to the identical duplicate set first so the loop never hits an edge
-    if (dir === -1 && el.scrollLeft < step * 2) el.scrollLeft += h;
-    if (dir === 1 && el.scrollLeft + step * 2 >= h) el.scrollLeft -= h;
-
-    pauseFor(2500);
-    // fewer cards per click on small screens
-    const cards = window.innerWidth < 720 ? 1 : 2;
-    el.scrollBy({ left: dir * step * cards, behavior: "smooth" });
-  }, []);
-
-  /* Keep the loop seamless when the user drags / swipes */
-  const onScroll = () => {
-    const el = scrollerRef.current;
-    const h = half();
-    if (!el || !h) return;
-    if (el.scrollLeft >= h) el.scrollLeft -= h;
-    else if (el.scrollLeft <= 0) el.scrollLeft += h;
+  const resetFilters = () => {
+    setSelectedDept("All");
+    setSearchQuery("");
   };
 
   return (
-    <section className="team-strip" aria-label="Team members">
-      <button
-        type="button"
-        className="team-nav team-nav--prev"
-        aria-label="Previous team members"
-        onClick={() => slide(-1)}
-      >
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          <path d="M15 18l-6-6 6-6" />
-        </svg>
-      </button>
+    <main
+      data-nav-theme="dark"
+      className="min-h-screen bg-black text-white selection:bg-[#76ABAE] selection:text-black"
+    >
+      {/* Header: plain, left-aligned */}
+      <section className="mx-auto max-w-7xl px-5 pb-10 pt-32 sm:px-8 sm:pt-40 lg:px-14">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <h1 className="text-5xl font-bold tracking-tight sm:text-6xl">
+              Our team
+            </h1>
+            <p className="mt-3 text-base text-white/55">
+              {TEAM_MEMBERS.length} people, {DEPARTMENTS.length - 1} departments,
+              one office.
+            </p>
+          </div>
 
-      <div
-        className="team-strip__scroller"
-        ref={scrollerRef}
-        onScroll={onScroll}
-        /* mouse only: a tap on touch screens must not freeze auto-scroll */
-        onPointerEnter={(e) => {
-          if (e.pointerType === "mouse") hovering.current = true;
-        }}
-        onPointerLeave={(e) => {
-          if (e.pointerType === "mouse") hovering.current = false;
-        }}
-        /* keyboard focus only, not tap focus */
-        onFocus={(e) => {
-          if ((e.target as HTMLElement).matches(":focus-visible")) hovering.current = true;
-        }}
-        onBlur={() => (hovering.current = false)}
-        onTouchStart={() => pauseFor(4000)}
-        onTouchEnd={() => pauseFor(2500)}
-      >
-        <ul className="team-strip__track" ref={trackRef}>
-          {TEAM.map((m, i) => (
-            <Card key={m.name} member={m} index={i} />
-          ))}
-          {/* duplicate set for a seamless infinite loop */}
-          {TEAM.map((m, i) => (
-            <Card key={`dup-${m.name}`} member={m} index={i} hidden />
-          ))}
-        </ul>
-      </div>
+          <div className="relative w-full lg:max-w-sm">
+            <Search
+              size={18}
+              className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-white/40"
+            />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search name or role"
+              aria-label="Search team members"
+              className="w-full rounded-2xl bg-[#14181f] py-3.5 pl-11 pr-10 text-sm text-white placeholder-white/40 outline-none ring-1 ring-white/10 transition focus:ring-[#76ABAE]"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                aria-label="Clear search"
+                className="absolute right-3 top-1/2 grid size-7 -translate-y-1/2 place-items-center rounded-full text-white/50 hover:bg-white/10 hover:text-white"
+              >
+                <X size={15} />
+              </button>
+            )}
+          </div>
+        </div>
 
-      <button
-        type="button"
-        className="team-nav team-nav--next"
-        aria-label="Next team members"
-        onClick={() => slide(1)}
-      >
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          <path d="M9 6l6 6-6 6" />
-        </svg>
-      </button>
-    </section>
+        {/* Department tabs: underline style */}
+        <div className="mt-10 flex gap-6 overflow-x-auto border-b border-white/10 sm:gap-8">
+          {DEPARTMENTS.map((dept) => {
+            const active = selectedDept === dept;
+            return (
+              <button
+                key={dept}
+                type="button"
+                onClick={() => setSelectedDept(dept)}
+                aria-pressed={active}
+                className={`-mb-px shrink-0 whitespace-nowrap border-b-2 pb-3 text-sm font-medium outline-none transition-colors focus-visible:text-white sm:text-base ${
+                  active
+                    ? "border-[#76ABAE] text-white"
+                    : "border-transparent text-white/50 hover:text-white"
+                }`}
+              >
+                {dept}
+                <span className="ml-1.5 text-white/35">{deptCounts[dept]}</span>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Cards */}
+      <section className="mx-auto max-w-7xl px-5 pb-24 sm:px-8 lg:px-14">
+        {filteredMembers.length > 0 ? (
+          <div className="grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-8">
+            {filteredMembers.map((member, i) => (
+              <MemberCard key={member.id} member={member} eager={i < 8} />
+            ))}
+          </div>
+        ) : (
+          <div className="mx-auto my-20 max-w-sm text-center">
+            <div className="mx-auto grid size-12 place-items-center rounded-full bg-white/10 text-white/50">
+              <UserX size={22} />
+            </div>
+            <h3 className="mt-4 text-lg font-semibold">No one found</h3>
+            <p className="mt-2 text-sm text-white/60">
+              Nothing matches your search. Try another name or role.
+            </p>
+            <button
+              type="button"
+              onClick={resetFilters}
+              className="mt-6 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black"
+            >
+              Clear filters
+            </button>
+          </div>
+        )}
+      </section>
+    </main>
   );
-};
-
-const OurTeam: React.FC = () => (
-  <main className="team-page">
-    <style>{css}</style>
-    
-    <QuoteSection />
-    <TeamStrip />
-  </main>
-);
-
-export default OurTeam;
-
-/* ---------- Styles (fluid sizes + tablet/mobile breakpoints) ---------- */
-const css = `
-.team-page{
-  --bg:#000000; --text:#f4f6ff; --muted:#a9b0d0; --accent:#7c8cff;
-
-  /* fluid sizes: they scale smoothly from phone to desktop */
-  --card-w:clamp(140px, 17vw, 200px);
-  --card-h:calc(var(--card-w) * 2.35);
-  --gap:clamp(24px, 4vw, 56px);
-  --stagger:calc(var(--card-w) * .5);
-  --nav:clamp(42px, 5vw, 52px);
-  --edge:clamp(8px, 2vw, 24px);
-
-  background:var(--bg); color:var(--text);
-  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
-  padding:clamp(56px, 9vw, 96px) 0; overflow:hidden;
 }
-.team-page *{box-sizing:border-box}
-
-/* Manager */
-.team-manager{
-  display:flex; align-items:center; justify-content:center;
-  gap:clamp(28px, 5vw, 56px);
-  max-width:960px; margin:0 auto; padding:0 clamp(16px, 4vw, 24px);
-}
-.team-manager__photo{
-  width:clamp(180px, 28vw, 240px); aspect-ratio:3 / 4; height:auto;
-  object-fit:cover; object-position:center top; flex-shrink:0;
-  border-radius:999px; background:#161a35;
-}
-.team-manager__body{max-width:520px; min-width:0}
-.team-manager blockquote{
-  margin:0 0 18px; font-size:clamp(1.15rem, 2.2vw, 1.75rem); line-height:1.4; font-weight:500;
-  overflow-wrap:anywhere;
-}
-.team-manager blockquote + blockquote{color:var(--muted); font-size:clamp(.95rem, 1.5vw, 1.05rem); font-weight:400}
-.team-manager__name{margin:24px 0 0; font-weight:600; font-size:1.1rem}
-.team-manager__role{margin:4px 0 0; color:var(--accent)}
-
-/* Quote */
-.team-quote{text-align:center; padding:clamp(56px, 9vw, 96px) 20px clamp(36px, 6vw, 56px)}
-.team-quote h2{margin:0; font-size:clamp(1.9rem, 5vw, 3rem); font-weight:700}
-.team-quote p{
-  margin:14px auto 0; max-width:640px; color:var(--muted);
-  font-size:clamp(.95rem, 2vw, 1.25rem); letter-spacing:.03em; line-height:1.5;
-}
-
-/* Scrolling strip */
-.team-strip{position:relative; padding:0 0 clamp(40px, 7vw, 80px)}
-.team-strip__scroller{
-  overflow-x:auto; overflow-y:hidden; scrollbar-width:none; -ms-overflow-style:none;
-  -webkit-overflow-scrolling:touch; overscroll-behavior-x:contain;
-}
-.team-strip__scroller::-webkit-scrollbar{display:none}
-.team-strip__track{
-  display:flex; width:max-content; margin:0; padding:0; list-style:none;
-}
-
-/* Back / Next buttons: vertically centred on the strip */
-.team-nav{
-  position:absolute; z-index:2;
-  top:calc((var(--card-h) + var(--stagger)) / 2 - var(--nav) / 2);
-  width:var(--nav); height:var(--nav); border-radius:50%;
-  border:1px solid rgba(255,255,255,.25);
-  background:rgba(10,13,31,.75); color:var(--text); cursor:pointer;
-  display:flex; align-items:center; justify-content:center;
-  backdrop-filter:blur(6px); -webkit-tap-highlight-color:transparent;
-  transition:background .2s ease, transform .2s ease;
-}
-.team-nav:hover{background:var(--accent); transform:scale(1.06)}
-.team-nav:focus-visible{outline:3px solid var(--accent); outline-offset:3px}
-.team-nav--prev{left:var(--edge)}
-.team-nav--next{right:var(--edge)}
-
-.team-card{
-  margin-right:var(--gap);
-  position:relative; width:var(--card-w); height:var(--card-h); flex-shrink:0;
-  border-radius:calc(var(--card-w) / 2); overflow:hidden; background:#161a35; outline:none;
-}
-.team-card.is-low{margin-top:var(--stagger)}   /* stagger like the reference */
-.team-card.is-high{margin-top:0}
-.team-card img{
-  width:100%; height:100%; object-fit:cover; object-position:center 20%;
-  display:block; transition:transform .5s ease;
-}
-
-/* Hover info: designation runs vertically, name sits at the bottom */
-.team-card__info{
-  position:absolute; inset:0; display:flex; flex-direction:column; justify-content:flex-end;
-  padding:clamp(16px, 2vw, 28px) clamp(12px, 1.4vw, 18px); opacity:0; transition:opacity .3s ease;
-  background:linear-gradient(to top, rgba(10,13,31,.92) 5%, rgba(10,13,31,.35) 55%, transparent);
-}
-.team-card__role{
-  position:absolute; right:clamp(12px, 1.4vw, 18px); bottom:clamp(16px, 2vw, 28px);
-  writing-mode:vertical-rl; transform:rotate(180deg);
-  font-size:clamp(.9rem, 1.3vw, 1.2rem); font-weight:600; letter-spacing:.04em;
-  max-height:calc(var(--card-h) - 60px);
-}
-.team-card__name{
-  font-size:clamp(.9rem, 1.3vw, 1.05rem); font-weight:600; max-width:55%; text-align:left;
-}
-.team-card:hover img,.team-card:focus-visible img{transform:scale(1.05)}
-.team-card:hover .team-card__info,
-.team-card:focus-visible .team-card__info{opacity:1}
-.team-card:focus-visible{box-shadow:0 0 0 3px var(--accent)}
-
-/* Touch devices (phones, tablets) have no hover: always show the info */
-@media (hover:none){ .team-card__info{opacity:1} }
-
-/* Tablet */
-@media (max-width:1024px){
-  .team-manager{max-width:760px}
-}
-
-/* Mobile: stack the manager block */
-@media (max-width:720px){
-  .team-manager{flex-direction:column; text-align:center}
-  .team-manager__photo{width:min(60vw, 220px)}
-}
-
-/* Very small phones */
-@media (max-width:380px){
-  .team-nav{display:none} /* swipe instead */
-}
-`;

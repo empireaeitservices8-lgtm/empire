@@ -158,6 +158,13 @@ function Letters({ text }: { text: string }) {
 export default function Careers() {
   const root = useRef<HTMLElement>(null);
 
+  useEffect(() => {
+    // Always reset to top when navigating to Careers
+    if (typeof window !== "undefined") {
+      window.scrollTo(0, 0);
+    }
+  }, []);
+
   /* -------------------------------------------------------
      LENIS SMOOTH SCROLL
   ------------------------------------------------------- */
@@ -173,6 +180,11 @@ export default function Careers() {
       autoRaf: false,
       anchors: true,
     });
+
+    lenis.scrollTo(0, { immediate: true });
+    if (typeof window !== "undefined") {
+      window.scrollTo(0, 0);
+    }
 
     lenis.on("scroll", ScrollTrigger.update);
 

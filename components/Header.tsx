@@ -39,19 +39,22 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
 /* ================================================================== */
-/*  1. DATA  (same palette as the Services page)                       */
+/*  1. DATA  (same content and palette as the Services page)           */
+/*  IMAGES: change the `image` value of any service below.             */
+/*  Put files in public/images/services/  ->  "/images/services/x.jpg" */
+/*  (a full link like "https://..." also works)                        */
 /* ================================================================== */
-type Service = { slug: string; title: string; description: string; tags: string[]; href: string; bg: string; fg: string; accent: string };
+type Service = { slug: string; title: string; description: string; tags: string[]; href: string; bg: string; fg: string; accent: string; image?: string };
 
 const SERVICES: Service[] = [
-  { slug: "web-design", title: "Web Design", description: "We create stunning, responsive websites that captivate visitors and elevate your brand.", tags: ["UI/UX Design", "Responsive", "Brand Identity"], href: "/services/web-design", bg: "#1a1411", fg: "#ffedd7", accent: "#e8a15a" },
-  { slug: "web-development", title: "Web Development", description: "We build secure, scalable websites engineered for performance and growth.", tags: ["React / Next.js", "WordPress", "Laravel"], href: "/services/web-development", bg: "#121414", fg: "#ffffff", accent: "#3dd6c6" },
-  { slug: "mobile-app-development", title: "Mobile App Development", description: "We develop powerful Android and iOS apps for seamless user experiences.", tags: ["Android", "iOS", "Flutter"], href: "/services/mobile-app-development", bg: "#E3E3F8", fg: "#000000", accent: "#7b7be8" },
-  { slug: "hosting-domain", title: "Hosting & Domain", description: "We keep your website fast, secure, and online with reliable hosting solutions.", tags: ["SSL Security", "99.9% Uptime", "Daily Backups"], href: "/services/hosting-domain", bg: "#EFD5D3", fg: "#000000", accent: "#d8554f" },
-  { slug: "digital-marketing", title: "Digital Marketing", description: "We boost visibility and attract customers through result-driven digital strategies.", tags: ["SEO", "Social Media", "Content Marketing"], href: "/services/digital-marketing", bg: "#111a13", fg: "#d9f3de", accent: "#5fbf7a" },
-  { slug: "e-commerce-application", title: "E-Commerce Application", description: "We build seamless online stores that turn visitors into loyal customers.", tags: ["WooCommerce", "Payment Gateway", "Inventory"], href: "/services/e-commerce-application", bg: "#BFE3FA", fg: "#0a2540", accent: "#6cb8ee" },
-  { slug: "software-application", title: "Software Application", description: "We create custom software that streamlines workflows and boosts productivity.", tags: ["ERP Systems", "CRM", "Custom Software"], href: "/services/software-application", bg: "#1a1411", fg: "#ffedd7", accent: "#e8a15a" },
-  { slug: "seo", title: "SEO", description: "We improve search rankings, increase organic traffic, and grow your online reach.", tags: ["On-Page SEO", "Off-Page SEO", "Keywords"], href: "/services/seo", bg: "#121414", fg: "#ffffff", accent: "#3dd6c6" },
+  { slug: "graphic-design", title: "Graphic Design", description: "We create visually compelling designs that build strong brand identities and make your business stand out.", tags: ["Brand Identity", "Social Media Creatives", "Marketing Materials"], href: "/services/graphic-design", bg: "#121414", fg: "#ffffff", accent: "#3dd6c6", image: "/images/services/graphic-design.jpg" },
+  { slug: "web-development", title: "Web Development", description: "We build secure, scalable websites engineered for performance and growth.", tags: ["React / Next.js", "Node", "Python", "MySql", "MongoDB"], href: "/services/web-development", bg: "#121414", fg: "#ffffff", accent: "#3dd6c6", image: "/images/services/webdevelopment.jpg" },
+  { slug: "mobile-app-development", title: "Mobile App Development", description: "We develop powerful Android and iOS apps for seamless user experiences.", tags: ["Android", "iOS", "Flutter", "Python", "Node", "MySql"], href: "/services/mobile-app-development", bg: "#E3E3F8", fg: "#000000", accent: "#7b7be8", image: "/images/services/app-development.jpg" },
+  { slug: "operations", title: "Operations", description: "We act as the mediator between the client and the developers, keeping every project clear and on track.", tags: ["Client Coordination", "Project Management", "Quality Assurance"], href: "/services/operations", bg: "#EFD5D3", fg: "#000000", accent: "#d8554f", image: "/images/services/operations.jpg" },
+  { slug: "digital-marketing", title: "Digital Marketing", description: "We boost visibility and attract customers through result-driven digital strategies.", tags: ["SEO", "Social Media", "Content Marketing"], href: "/services/digital-marketing", bg: "#111a13", fg: "#d9f3de", accent: "#5fbf7a", image: "/images/services/digital-marketing.jpg" },
+  { slug: "e-commerce-application", title: "E-Commerce Application", description: "We build seamless online stores that turn visitors into loyal customers.", tags: ["WooCommerce", "Payment Gateway", "Inventory Management"], href: "/services/e-commerce-application", bg: "#BFE3FA", fg: "#0a2540", accent: "#6cb8ee", image: "/images/services/ecommerce.jpg" },
+  { slug: "sales", title: "Sales", description: "We turn leads into long-term clients with a clear, consultative sales approach.", tags: ["Lead Generation", "Client Acquisition", "Business Development"], href: "/services/sales", bg: "#1a1411", fg: "#ffedd7", accent: "#e8a15a", image: "/images/services/sales.jpg" },
+  { slug: "seo", title: "SEO", description: "We improve search rankings, increase organic traffic, and grow your online reach.", tags: ["On-Page SEO", "Off-Page SEO", "Keyword Optimization"], href: "/services/seo", bg: "#121414", fg: "#ffffff", accent: "#3dd6c6", image: "/images/services/seo.jpg" },
 ];
 
 const LINKS = [
@@ -91,7 +94,7 @@ const INDEX: Hit[] = [
   ...SERVICES.map<Hit>((s) => ({ title: s.title, sub: s.tags.join(" • "), kind: "Service", href: s.href, hay: `${s.title} ${s.tags.join(" ")} ${s.description}`.toLowerCase() })),
   ...PAGES.map<Hit>((p) => ({ title: p.title, sub: p.sub, kind: "Page", href: p.href, hay: `${p.title} ${p.sub}`.toLowerCase() })),
 ];
-const SUGGESTED = ["Web Design", "Web Development", "Mobile App Development", "SEO", "Works", "Contact"]
+const SUGGESTED = ["Graphic Design", "Web Development", "Mobile App Development", "SEO", "Works", "Contact"]
   .map((t) => INDEX.find((h) => h.title === t))
   .filter((h): h is Hit => Boolean(h));
 
@@ -160,7 +163,7 @@ function detectTone(header: HTMLElement | null): Tone | null {
     }
   }
   if (!bg) {
-    bg = [255, 255, 255];
+    bg = [5, 6, 11];
     src = start;
   }
   let fg: RGB | null = null;
@@ -188,7 +191,7 @@ const ON = "!text-[color:var(--nav-fg)]";
  *                    black on light ones). Best for one-colour logos.
  *           false -> the logo keeps its own original colours.
  */
-const LOGO = { src: "images/logo.png", alt: "Empire AE", recolor: true };
+const LOGO = { src: "/images/logo.png", alt: "Empire AE", recolor: true };
 
 function Logo() {
   // Height of the logo. The width follows automatically from the logo's shape.
@@ -265,6 +268,16 @@ function RollingTitle({ text }: { text: string }) {
 }
 
 function Art({ s }: { s: Service }) {
+  if (s.image) {
+    return (
+      <div
+        role="img"
+        aria-label={s.title}
+        className="size-full bg-cover bg-center"
+        style={{ backgroundColor: s.bg, backgroundImage: `url(${s.image})` }}
+      />
+    );
+  }
   const soft = `color-mix(in srgb, ${s.fg} 22%, transparent)`;
   return (
     <div className="relative size-full overflow-hidden" style={{ backgroundColor: s.bg }} aria-hidden="true">
@@ -356,6 +369,7 @@ export default function Navbar() {
       schedule();
     };
 
+    apply();
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", schedule);
@@ -369,7 +383,7 @@ export default function Navbar() {
       window.removeEventListener("load", schedule);
       document.removeEventListener("transitionrun", follow, true);
     };
-  }, []);
+  }, [pathname]);
 
   /* ---- open / close helpers ---- */
   const closeSearch = useCallback((refocus = false) => {
@@ -513,7 +527,7 @@ export default function Navbar() {
       <header
         ref={headerRef}
         className={[
-          "fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top)] [--nav-bg:#ffffff] [--nav-fg:#0a0a0a]",
+          "fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top)] [--nav-bg:rgb(5_6_11)] [--nav-fg:rgb(255_255_255)]",
           "transition-[background-color,border-color] duration-300 ease-out",
           scrolled || megaOpen || searchOpen || menuOpen
             ? "border-b border-[color-mix(in_srgb,var(--nav-fg)_12%,transparent)] bg-[color-mix(in_srgb,var(--nav-bg)_78%,transparent)] backdrop-blur-xl"
