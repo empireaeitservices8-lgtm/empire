@@ -55,9 +55,9 @@ const COMPANY: {
 
 // NEXT_PUBLIC_ variables must be written out in full so Next.js can inline them.
 const EMAILJS = {
-  serviceId: process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
-  templateId: process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
-  publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY,
+  serviceId: process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "service_s40ma6c",
+  templateId: process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "template_1sr86lf",
+  publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "snIDquS_BL-EA7whE",
 };
 
 // Optional downloaded animated icon (GIF/WebP/PNG in /public). null = built-in animated SVG.
@@ -144,18 +144,19 @@ async function submitContact(values: FormValues): Promise<void> {
   await emailjs.send(
     serviceId,
     templateId,
-    
-{
-  sender_name: `${values.firstName} ${values.lastName}`,
-  sender_email: values.email,
-  reply_to: values.email,
-  phone: values.phone || "Not provided",
-  company: values.company || "Not provided",
-  subject: values.service,
-  service: values.service,
-  message: values.message,
-}
-,
+    {
+      from_name: `${values.firstName} ${values.lastName}`,
+      sender_name: `${values.firstName} ${values.lastName}`,
+      from_email: values.email,
+      sender_email: values.email,
+      reply_to: values.email,
+      phone: values.phone || "Not provided",
+      company: values.company || "Not provided",
+      subject: values.service,
+      service: values.service,
+      message: values.message,
+      to_email: "empireaeitsolutions@gmail.com",
+    },
     { publicKey }
   );
 }
