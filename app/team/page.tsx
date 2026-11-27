@@ -38,48 +38,59 @@ const DEPARTMENTS: Department[] = [
   "QA",
 ];
 
-const p = (n: string) => `/team/photo-one/photos-${n}.jpg`;
+const CLOUDINARY_CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "diy4ratd";
+const CLOUDINARY_TEAM_BASE = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/f_auto,q_auto/empire-ae/team`;
+
+const p = (n: string) => `${CLOUDINARY_TEAM_BASE}/photos-${n}.jpg`;
 
 const TEAM_MEMBERS: TeamMember[] = [
-  { id: "bijin-mohan", name: "Bijin Mohan", role: "Business Development Manager", department: "Business", image: p("08") },
-  { id: "sayooj-deepak", name: "Sayooj Deepak M", role: "Digital Marketing Manager", department: "Marketing", image: p("00") },
-  { id: "meera-m", name: "Meera M", role: "Sr. Graphic Designer", department: "Design", image: p("02") },
-  { id: "shyamil-k-v", name: "Shyamil K V", role: "Accountant & Finance", department: "Business", image: p("22") },
-  { id: "nidheesh-krishna", name: "Nidheesh Krishna N", role: "Flutter Developer", department: "Engineering", image: p("16") },
-  { id: "silpa-raji", name: "Silpa Raji", role: "Content Creator", department: "Content Creator", image: p("21") },
-  { id: "muhammed-nabeel", name: "Muhammed Nabeel", role: "Python Developer", department: "Engineering", image: p("18") },
-  { id: "aslam-k-m", name: "Aslam K M", role: "Flutter Developer", department: "Engineering", image: p("10") },
-  { id: "jaffar", name: "Jaffar", role: "Odoo Developer", department: "Engineering", image: p("29") },
-  { id: "alen-shaji", name: "Alen Shaji", role: "Operations Assistant", department: "Operations", image: p("13") },
-  // BUSINESS
-  { id: "gayathri-harsha", name: "Gayathri Harsha M", role: "Business Development Executive", department: "Business", image: p("07") },
-  { id: "karishma-h-k", name: "Karishma H.K", role: "Business Development Executive", department: "Business", image: p("03") },
-  { id: "sayed-ali", name: "Sayed Ali", role: "Digital Marketing Executive", department: "Business", image: p("20") },
-  { id: "tony", name: "Tony", role: "Business Development Executive", department: "Business", image: p("24") },
-  // DESIGN
-  { id: "alpha-nelson", name: "Alpha Nelson", role: "Graphic Designer", department: "Design", image: p("12") },
-  { id: "arya-p-u", name: "Arya P U", role: "Graphic Designer", department: "Design", image: p("11") },
-  //odoo
-  { id: "akhil-sabu", name: "Akhil Sabu", role: "Odoo Developer", department: "Engineering", image: p("01") },
-  { id: "adithya", name: "Adithya", role: "Odoo Functional Consultant", department: "Engineering", image: p("26") },
-  { id: "abeya", name: "Abeya", role: "Odoo Developer", department: "Engineering", image: p("27") },
-  { id: "sinan", name: "Sinan", role: "Odoo Developer", department: "Engineering", image: p("28") },
-  // ENGINEERING
-  { id: "sonamol-c-m", name: "Sonamol C M", role: "Backend Developer", department: "Engineering", image: p("25") },
-  { id: "jabzeena-m-a", name: "Jabzeena M A", role: "Python Developer", department: "Engineering", image: p("06") },
-  { id: "jemson-jacob", name: "Jemson Jacob", role: "Flutter Developer", department: "Engineering", image: p("05") },
-  { id: "nicy-K-kabir", name: "Nicy K kabir", role: "Flutter Developer", department: "Engineering", image: p("17") },
+  { id: "bijin-mohan", name: "Bijin Mohan", role: "Business Development Manager", department: "Business", image: "/team/PHOTO-ONE/bijin.jpg" },
+  { id: "sayooj-deepak", name: "Sayooj Deepak M", role: "Digital Marketing Manager", department: "Marketing", image: "/team/PHOTO-ONE/sayooj.png" },
+  { id: "meera-m", name: "Meera M", role: "Sr. Graphic Designer", department: "Design",  image: "/team/PHOTO-ONE/meera.jpg"  },
+  { id: "shyamil-k-v", name: "Shyamil K V", role: "Accountant & Finance", department: "Operations",  image: "/team/PHOTO-ONE/shyamil.jpg" },
+  { id: "nidheesh-krishna", name: "Nidheesh Krishna N", role: "Flutter Developer", department: "Engineering",  image: "/team/PHOTO-ONE/nidhesh.jpg"  },
+  { id: "jaffar", name: "Jaffar", role: "Odoo Developer", department: "Engineering",  image: "/team/PHOTO-ONE/jaffar.jpg"  },
+  { id: "silpa-raji", name: "Silpa Raji", role: "Content Creator", department: "Content Creator",  image: "/team/PHOTO-ONE/silpa.jpg"  },
+  { id: "muhammed-nabeel", name: "Muhammed Nabeel", role: "Python Developer", department: "Engineering",  image: "/team/PHOTO-ONE/nabeel.jpg" },
+  { id: "aslam-k-m", name: "Aslam K M", role: "Flutter Developer", department: "Engineering", image: "/team/PHOTO-ONE/aslam.jpg"  },
   
+  { id: "alen-shaji", name: "Alen Shaji", role: "Operations Assistant", department: "Operations",  image: "/team/PHOTO-ONE/alan.jpg" },
+  // BUSINESS
+  { id: "gayathri-harsha", name: "Gayathri Harsha M", role: "Business Development Executive", department: "Business",  image: "/team/PHOTO-ONE/gayatri.jpg"  },
+  { id: "karishma-h-k", name: "Karishma H.K", role: "Business Development Executive", department: "Business",  image: "/team/PHOTO-ONE/karishma.jpg" },
+  { id: "sayed-ali", name: "Sayed Ali", role: "Business Development Executive", department: "Business",  image: "/team/PHOTO-ONE/sayeed.jpg"  },
+  { id: "tony", name: "Tony", role: "Business Development Executive", department: "Business",  image: "/team/PHOTO-ONE/tony.jpg" },
+  // DESIGN
+  { id: "alpha-nelson", name: "Alpha Nelson", role: "Graphic Designer", department: "Design", image: "/team/PHOTO-ONE/alpha.jpg"  },
+  { id: "arya-p-u", name: "Arya P U", role: "Graphic Designer", department: "Design",  image: "/team/PHOTO-ONE/arya.jpg"  },
+  //odoo
+  { id: "akhil-sabu", name: "Akhil Sabu", role: "Odoo Developer", department: "Engineering",  image: "/team/PHOTO-ONE/akhil.jpg"  },
+  { id: "adithya", name: "Adithya", role: "Odoo Functional Consultant", department: "Engineering",  image: "/team/PHOTO-ONE/adithya.jpg" },
+  { id: "abeya", name: "Abeya", role: "Odoo Developer", department: "Engineering",  image: "/team/PHOTO-ONE/abeya.jpg"  },
+  { id: "sinan", name: "Sinan", role: "Odoo Developer", department: "Engineering",  image: "/team/PHOTO-ONE/sinan.jpg"  },
+  // ENGINEERING
+  { id: "sonamol-c-m", name: "Sonamol C M", role: "Backend Developer", department: "Engineering",  image: "/team/PHOTO-ONE/sona.jpg" },
+  { id: "jabzeena-m-a", name: "Jabzeena M A", role: "Python Developer", department: "Engineering",  image: "/team/PHOTO-ONE/jabzeena.jpg" },
+  { id: "jemson-jacob", name: "Jemson Jacob", role: "Flutter Developer", department: "Engineering",  image: "/team/PHOTO-ONE/jemson.jpg"  },
+  { id: "nicy-K-kabir", name: "Nicy K kabir", role: "Flutter Developer", department: "Engineering", image:"/team/PHOTO-ONE/nicy.jpg" },
+  { id: "abin", name: "Abin CS", role: "Software Developer", department: "Engineering",  image: "/team/PHOTO-ONE/abin.png"  },
+  { id: "rameesa", name: "Rameesa Bava", role: "Software Developer", department: "Engineering",  image: "/team/PHOTO-ONE/rameesa.png"  },
+  { id: "teffin", name: "Teffin Bose", role: "Software Developer", department: "Engineering",  image: "/team/PHOTO-ONE/teffin.png"  },
+  { id: "krishnendu", name: "Krishnendu Dinesh", role: "Software Developer", department: "Engineering",  image: "/team/PHOTO-ONE/krishnendu.png"  },
+  { id: "athmaja", name: "Athmaja V", role: "Software Developer", department: "Engineering",  image: "/team/PHOTO-ONE/athmaja.png"  },
   // MARKETING
-  { id: "nandana", name: "Nandana", role: "Digital Marketing Executive", department: "Marketing", image: p("15") },
-  { id: "arjun-shaji", name: "Arjun Shaji", role: "Business Development Executive", department: "Marketing", image: p("00") },
-  { id: "aswathy-v", name: "Aswathy V", role: "Digital Marketing Executive", department: "Marketing", image: p("09") },
+  { id: "nandana", name: "Nandana KM", role: "Digital Marketing Executive", department: "Marketing",  image: "/team/PHOTO-ONE/nandana.jpg"  },
+  { id: "arjun-shaji", name: "Arjun Shaji", role: "Digital Marketing Executive", department: "Marketing",  image: "/team/PHOTO-ONE/arjun.png"  },
+  { id: "aswathy-v", name: "Aswathy V", role: "Digital Marketing Executive", department: "Marketing",  image: "/team/PHOTO-ONE/ashwathy.jpg"  },
+  { id: "soji", name: "Soji Kurian", role: "Digital Marketing Executive", department: "Marketing",  image: "/team/PHOTO-ONE/soji.png"  },
+  
+
   // OPERATIONS
-  { id: "nahla-nasarin", name: "Nahla Nasarin K.N", role: "Operations Executive", department: "Operations", image: p("14") },
-  { id: "j-mahadev", name: "J Mahadev", role: "Operations Executive", department: "Operations", image: p("04") },
+  { id: "nahla-nasarin", name: "Nahla Nasarin K.N", role: "Operations Executive", department: "Operations", image: "/team/PHOTO-ONE/nahla.jpg"  },
+  { id: "j-mahadev", name: "J Mahadev", role: "Operations Executive", department: "Operations",  image: "/team/PHOTO-ONE/mahadev.jpg" },
   // QA
-  { id: "raina-ranjan", name: "Raina Ranjan", role: "Software QA Tester", department: "QA", image: p("19") },
-  { id: "shilpa-p-r", name: "Shilpa P R", role: "Software QA Tester", department: "QA", image: p("23") },
+  { id: "raina-ranjan", name: "Raina Ranjan", role: "Software QA Tester", department: "QA", image: "/team/PHOTO-ONE/raina.jpg"  },
+  { id: "shilpa-p-r", name: "Shilpa P R", role: "Software QA Tester", department: "QA", image: "/team/PHOTO-ONE/shilpa.jpg"  },
 ];
 
 /* ========================================================================== */
@@ -95,7 +106,34 @@ const MemberCard = memo(function MemberCard({
   member: TeamMember;
   eager: boolean;
 }) {
+  const [src, setSrc] = useState(member.image);
   const [failed, setFailed] = useState(false);
+
+  const handleError = () => {
+    // If Cloudinary URL failed, fall back to local file
+    if (src.includes("res.cloudinary.com")) {
+      const filename = src.split("/").pop();
+      if (filename) {
+        if (filename.toLowerCase().startsWith("soji")) {
+          setSrc("/team/pic/soji.PNG");
+          return;
+        }
+        if (filename.toLowerCase().startsWith("arjun")) {
+          setSrc("/team/pic/Arjun.jpeg");
+          return;
+        }
+        setSrc(`/team/PHOTO-ONE/${filename}`);
+        return;
+      }
+    }
+    if (src.includes("/team/PHOTO-ONE/")) {
+      setSrc(src.replace("/team/PHOTO-ONE/", "/team/photo-one/"));
+    } else if (src.includes("/team/photo-one/")) {
+      setSrc(src.replace("/team/photo-one/", "/team/PHOTO-ONE/"));
+    } else {
+      setFailed(true);
+    }
+  };
 
   return (
     <article className="group">
@@ -107,14 +145,14 @@ const MemberCard = memo(function MemberCard({
         ) : (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={member.image}
+            src={src}
             alt={member.name}
             width={600}
             height={800}
             loading={eager ? "eager" : "lazy"}
             fetchPriority={eager ? "high" : "auto"}
             decoding="async"
-            onError={() => setFailed(true)}
+            onError={handleError}
             className="h-full w-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-110"
           />
         )}

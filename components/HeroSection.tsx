@@ -14,34 +14,38 @@ export type HeroSlide = {
   href: string;
 };
 
+const CLOUDINARY_CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "diy4ratd";
+export const CLOUDINARY_HERO_VIDEO = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/video/upload/empire-ae/hero/homevideo1.mp4`;
+export const CLOUDINARY_HERO_POSTER = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/f_auto,q_auto/empire-ae/hero/hero.webp`;
+
 export const HERO_SLIDES: HeroSlide[] = [
   {
-    video: "/videos/homevideo1.mp4",
-    poster: "/hero.webp",
+    video: CLOUDINARY_HERO_VIDEO,
+    poster: CLOUDINARY_HERO_POSTER,
     title: "",
     text: "",
     cta: "",
     href: "",
   },
   {
-    video: "/videos/homevideo1.mp4",
-    poster: "/hero.webp",
+    video: CLOUDINARY_HERO_VIDEO,
+    poster: CLOUDINARY_HERO_POSTER,
     title: "",
     text: "",
     cta: "",
     href: "/services",
   },
   {
-    video: "/videos/homevideo1.mp4",
-    poster: "/hero.webp",
+    video: CLOUDINARY_HERO_VIDEO,
+    poster: CLOUDINARY_HERO_POSTER,
     title: "",
     text: "",
     cta: "",
     href: "/services",
   },
   {
-    video: "/videos/homevideo1.mp4",
-    poster: "/hero.webp",
+    video: CLOUDINARY_HERO_VIDEO,
+    poster: CLOUDINARY_HERO_POSTER,
     title: "",
     text: "",
     cta: "",
@@ -62,7 +66,13 @@ export default function HeroSection({ slides = HERO_SLIDES }: { slides?: HeroSli
 
   const count = slides.length;
   const slide = slides[current] || HERO_SLIDES[0];
-  const posterSrc = slide.poster || "/hero.webp";
+  const [videoSrc, setVideoSrc] = useState(slide.video);
+  const [posterSrc, setPosterSrc] = useState(slide.poster || "/hero.webp");
+
+  useEffect(() => {
+    setVideoSrc(slide.video);
+    setPosterSrc(slide.poster || "/hero.webp");
+  }, [slide.video, slide.poster]);
 
   // Stable callback ref: sets DOM muted & defaultMuted immediately on attach without re-render churn
   const setVideoRef = useCallback((node: HTMLVideoElement | null) => {
@@ -227,7 +237,7 @@ export default function HeroSection({ slides = HERO_SLIDES }: { slides?: HeroSli
       {/* Single video element: muted and playsInline for Chrome / mobile autoplay */}
       <video
         ref={setVideoRef}
-        src={slide.video}
+        src={videoSrc}
         poster={posterSrc}
         autoPlay
         muted={muted}
@@ -244,7 +254,11 @@ export default function HeroSection({ slides = HERO_SLIDES }: { slides?: HeroSli
           setIsAutoplayBlocked(false);
         }}
         onError={() => {
-          console.warn("Hero video failed to load or play:", slide.video);
+          console.warn("Hero video failed to load or play:", videoSrc);
+          if (videoSrc !== "/videos/homevideo1.mp4") {
+            setVideoSrc("/videos/homevideo1.mp4");
+            setPosterSrc("/hero.webp");
+          }
         }}
         className="absolute inset-0 -z-20 h-full w-full object-cover object-center"
       />

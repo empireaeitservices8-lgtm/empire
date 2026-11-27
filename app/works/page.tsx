@@ -503,7 +503,7 @@ const PROJECTS: Project[] = [
     description:
       "Discover premium fragrances and enjoy a seamless shopping experience with Mirqas Perfumes.",
     category: "Web Development",
-    image: "/images/logos/mirqas.png",
+    image: "/images/logos/logoo.png",
     imageAlt: "Mirqas logo",
     overlayTone: "dark",
     bgColor: "#fffdfd",
@@ -527,7 +527,7 @@ const PROJECTS: Project[] = [
     title: "Viyodha",
     // TODO: replace this with the real description for Viyodha
     description:
-      "Discover a beautiful collection of elegant and trendy women’s wear at Izha, bringing together style, comfort, and quality for every occasion.",
+      "Discover Viyodha’s authentic Kerala spices, naturally sourced from Idukki and Wayanad, bringing freshness, purity, and rich flavour to every dish.",
     category: "Web Development",
     image: "/images/Web Logo/viyodha.jpeg",
     imageAlt: "Viyodha logo",
@@ -540,7 +540,7 @@ const PROJECTS: Project[] = [
     title: "Hub Zone",
     // TODO: replace this with the real description for Hub Zone
     description:
-      "Discover a beautiful collection of elegant and trendy women’s wear at Izha, bringing together style, comfort, and quality for every occasion.",
+      "Discover HUBZONE’s diverse collection of quality Ayurvedic care, perfumes, kitchen essentials, Wayanad coffee, and cleaning products for everyday needs.",
     category: "Web Development",
     image: "/images/Web Logo/hubzone.jpeg",
     imageAlt: "Hub Zone logo",
@@ -555,7 +555,7 @@ const PROJECTS: Project[] = [
     description:
       "Discover a beautiful collection of elegant and trendy women’s wear at Izha, bringing together style, comfort, and quality for every occasion.",
     category: "Web Development",
-    image: "/images/Web Logo/imaans.jpeg",
+    image: "/images/logos/imann.png",
     imageAlt: "Imaans logo",
     overlayTone: "light", // FIXED: dark green background needs light text
     bgColor: "#03180c",
@@ -567,8 +567,8 @@ const PROJECTS: Project[] = [
     description:
       "Discover a beautiful collection of elegant and trendy women’s wear at Izha, bringing together style, comfort, and quality for every occasion.",
     category: "Web Development",
-    image: "/images/Web Logo/izha.png",
-    imageAlt: "Izha Designs logo", // FIXED: was "mirqas logo"
+    image: "/images/logos/logooo.png",
+    imageAlt: "Izha Designs logo", 
     overlayTone: "dark",
     bgColor: "#ff89a1",
     year: "2025",
@@ -609,6 +609,19 @@ const PROJECTS: Project[] = [
     bgColor: "#FFFFFF",
     year: "2025",
   },
+    {
+    id: "bhoumi_consultancy",
+    title: "Bhoumi Consultancy",
+    // TODO: replace this with the real description for Viyodha
+    description:
+      "Explore Bhoumi Consultancy’s expert health insurance guidance, helping individuals and families choose suitable coverage with confidence and peace of mind.",
+    category: "Web Development",
+    image: "/images/logos/bhoumi.jpeg",
+    imageAlt: "bhoumi_consultancy logo",
+    overlayTone: "dark",
+    bgColor: "#fffdfd",
+    year: "2026",
+  },
   {
     id: "Fira",
     title: "Fira",
@@ -620,6 +633,19 @@ const PROJECTS: Project[] = [
     overlayTone: "light",
     bgColor: "#643C5F",
     href: "https://example.com", // replace with your project URL
+    year: "2026",
+  },
+   {
+    id: "keraladesham",
+    title: "Keraladesham",
+    // TODO: replace this with the real description for Viyodha
+    description:
+      "Discover Keraladesham, a Malayalam news platform delivering Kerala’s latest news, local updates, and current affairs.",
+    category: "Web Development",
+    image: "/images/logos/keraladesham.jpeg",
+    imageAlt: "keraladesham logo",
+    overlayTone: "dark",
+    bgColor: "#fffdfd",
     year: "2026",
   },
   {
@@ -652,8 +678,8 @@ const PROJECTS: Project[] = [
     category: "Digital Marketing",
     image: "/images/logos/lee.png",
     imageAlt: "le & lee logo",
-    overlayTone: "dark",
-    bgColor: "#F5F5F0",
+    overlayTone: "light",
+    bgColor: "#000000",
     year: "2025",
   },
   {
@@ -816,7 +842,7 @@ const PROJECTS: Project[] = [
     title: "AZB",
     description: "Your one-stop store for everyday needs, with quality products at one place.",
     category: "Web Development",
-    image: "/images/logos/AZB.png",
+    image: "/images/logos/AZB.jpeg",
     imageAlt: "AZB logo",
     overlayTone: "light",
     bgColor: "#000000",
@@ -981,10 +1007,10 @@ const PROJECTS: Project[] = [
     title: "Dhavam Spices",
     description: "Farm-Fresh Spice E-commerce Platform offering quality spices sourced directly from local farms.",
     category: "Web Development",
-    image: "/images/logos/dhavam.png",
+    image: "/images/logos/dhavam.jpeg",
     imageAlt: "Dhavam Spices logo",
     overlayTone: "dark",
-    bgColor: "#FFFFFF",
+    bgColor: "#f2efef",
     year: "2026",
   },
   {
@@ -992,10 +1018,10 @@ const PROJECTS: Project[] = [
     title: "Vivide",
     description: "Creative digital marketing and brand promotion helping modern brands stand out and grow.",
     category: "Digital Marketing",
-    image: "/images/logos/vivide.png",
+    image: "/images/Dm/vivide.png",
     imageAlt: "Vivide logo",
     overlayTone: "dark",
-    bgColor: "#FFFFFF",
+    bgColor: "#fffcfc",
     year: "2025",
   },
 ];
