@@ -27,9 +27,10 @@ export const projects: {
   { title: "Nakshathra HRMS", overlay: "Nakshathra", tag: "Mobile App", category: "Mobile App", text: "", image: "images/logos/Nakshathra_Hrms.png" },
   { title: "Mirqas", overlay: "Jewellery", tag: "Web Development", category: "Web Development", text: "Premium Perfume E-commerce Platform", image: "images/logos/mirqas.png" },
   { title: "Caior", overlay: "", tag: "Digital Marketing", category: "Digital Marketing", text: "Digital Marketing & Brand Promotion", image: "images/logos/caiorr.png" },
+  { title: "Vivide", overlay: "", tag: "Digital Marketing", category: "Digital Marketing", text: "", image: "images/Dm/vivide.png" },
   { title: "Kerala Institute", overlay: "", tag: "Mobile App", category: "Mobile App", text: "Kerala Institute – Educational Web Application", image: "images/logos/kde.png" },
-  { title: "Dhavam Spices", overlay: "ecommerce", tag: "Web Development", category: "Web Development", text: "Farm-Fresh Spice E-commerce Platform", image: "images/logos/dhavam.png" },
-  { title: "Vivide", overlay: "", tag: "Digital Marketing", category: "Digital Marketing", text: "", image: "images/logos/vivide.png" },
+  { title: "Dhavam Spices", overlay: "ecommerce", tag: "Web Development", category: "Web Development", text: "Farm-Fresh Spice E-commerce Platform", image: "images/Web Logo/dhavam.jpeg" },
+  
 ];
 
 const clamp = (v: number, min = 0, max = 1) => Math.min(max, Math.max(min, v));

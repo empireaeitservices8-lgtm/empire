@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import Link from "next/link";
 import { ChevronsDown, Volume2, VolumeX, Play } from "lucide-react";
 import { getLenis } from "@/lib/lenis";
@@ -15,8 +15,18 @@ export type HeroSlide = {
 };
 
 const CLOUDINARY_CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "diy4ratd";
+// Original URL (same as your first working version, no extra transformations)
 export const CLOUDINARY_HERO_VIDEO = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/video/upload/empire-ae/hero/homevideo1.mp4`;
 export const CLOUDINARY_HERO_POSTER = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/f_auto,q_auto/empire-ae/hero/hero.webp`;
+
+// Thumbnail shown immediately while the hero video loads.
+// We try "/images/" first and automatically fall back to "/image/".
+const HERO_THUMBNAILS = ["/images/herosection.png", "/image/herosection.png"];
+
+const LOCAL_VIDEO_FALLBACK = "/videos/homevideo1.mp4";
+
+// If the video has not produced a frame after this many ms, try the next video source
+const STALL_TIMEOUT_MS = 8000;
 
 export const HERO_SLIDES: HeroSlide[] = [
   {
@@ -58,21 +68,46 @@ export default function HeroSection({ slides = HERO_SLIDES }: { slides?: HeroSli
   const [progress, setProgress] = useState(0); // 0–1 for the playing video
   const [muted, setMuted] = useState(true);
   const [isAutoplayBlocked, setIsAutoplayBlocked] = useState(false);
+  // true once the video is actually playing frames (used only to remove the thumbnail underneath)
+  const [videoReady, setVideoReady] = useState(false);
+  const [thumbIndex, setThumbIndex] = useState(0);
+  const [sourceIndex, setSourceIndex] = useState(0);
 
   // Single video element for the whole hero section
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const isMountedRef = useRef(true);
   const isInitialMount = useRef(true);
 
   const count = slides.length;
   const slide = slides[current] || HERO_SLIDES[0];
-  const [videoSrc, setVideoSrc] = useState(slide.video);
-  const [posterSrc, setPosterSrc] = useState(slide.poster || "/hero.webp");
+  const thumbnail = HERO_THUMBNAILS[Math.min(thumbIndex, HERO_THUMBNAILS.length - 1)];
 
+  // Video sources are tried in order: 1) your Cloudinary URL, 2) the same video re-encoded as H.264
+  // (fixes codecs the browser cannot play), 3) the local file in /public/videos.
+  const sources = useMemo(() => {
+    const list = [slide.video];
+    if (slide.video.includes("/video/upload/")) {
+      list.push(slide.video.replace("/video/upload/", "/video/upload/f_mp4,vc_h264,q_auto/"));
+    }
+    list.push(LOCAL_VIDEO_FALLBACK);
+    return Array.from(new Set(list));
+  }, [slide.video]);
+
+  const videoSrc = sources[Math.min(sourceIndex, sources.length - 1)];
+
+  // Reset to the first source only when the slide's video URL really changes
   useEffect(() => {
-    setVideoSrc(slide.video);
-    setPosterSrc(slide.poster || "/hero.webp");
-  }, [slide.video, slide.poster]);
+    setSourceIndex(0);
+  }, [slide.video]);
+
+  const markReady = useCallback(() => {
+    if (isMountedRef.current) setVideoReady(true);
+  }, []);
+
+  const tryNextSource = useCallback(() => {
+    setVideoReady(false);
+    setSourceIndex((i) => (i < sources.length - 1 ? i + 1 : i));
+  }, [sources.length]);
 
   // Stable callback ref: sets DOM muted & defaultMuted immediately on attach without re-render churn
   const setVideoRef = useCallback((node: HTMLVideoElement | null) => {
@@ -107,9 +142,11 @@ export default function HeroSection({ slides = HERO_SLIDES }: { slides?: HeroSli
               setIsAutoplayBlocked(false);
             }
           })
-          .catch((err: unknown) => {
+          .catch((err) => {
+            if (process.env.NODE_ENV === "development") {
+              console.warn("[Hero] Autoplay blocked or play() failed:", err);
+            }
             if (isMountedRef.current) {
-              console.warn("Hero video autoplay blocked by browser:", err);
               setIsAutoplayBlocked(true);
             }
           });
@@ -135,11 +172,49 @@ export default function HeroSection({ slides = HERO_SLIDES }: { slides?: HeroSli
     };
   }, []);
 
-  // Play on initial mount and slide transition
+  // Whenever the source changes (the <video> is re-created), start playing it again
+  useEffect(() => {
+    setVideoReady(false);
+    attemptPlay();
+  }, [videoSrc, attemptPlay]);
+
+  // Safety net 1: poll briefly and reveal as soon as frames are really moving
+  // (covers events that fired before React attached its handlers).
+  useEffect(() => {
+    let tries = 0;
+    const id = window.setInterval(() => {
+      const v = videoRef.current;
+      tries += 1;
+      if (v && !v.paused && v.currentTime > 0 && v.readyState >= 2) {
+        markReady();
+        window.clearInterval(id);
+      } else if (tries > 100) {
+        window.clearInterval(id);
+      }
+    }, 100);
+    return () => window.clearInterval(id);
+  }, [markReady, videoSrc]);
+
+  // Safety net 2: if the current source never produces a frame (no error, just silence), try the next one
+  useEffect(() => {
+    if (isAutoplayBlocked) return;
+    const id = window.setTimeout(() => {
+      const v = videoRef.current;
+      if (!v) return;
+      if (v.readyState < 2 || v.currentTime === 0) {
+        if (process.env.NODE_ENV === "development") {
+          console.warn("[Hero] Video stalled, trying next source:", videoSrc);
+        }
+        tryNextSource();
+      }
+    }, STALL_TIMEOUT_MS);
+    return () => window.clearTimeout(id);
+  }, [videoSrc, isAutoplayBlocked, tryNextSource]);
+
+  // Play on slide transition (initial mount is handled by the source effect above)
   useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false;
-      attemptPlay();
       return;
     }
 
@@ -214,9 +289,7 @@ export default function HeroSection({ slides = HERO_SLIDES }: { slides?: HeroSli
       .then(() => {
         setIsAutoplayBlocked(false);
       })
-      .catch((err) => {
-        console.warn("Manual play attempt failed:", err);
-      });
+      .catch(() => {});
   };
 
   const scrollDown = () => {
@@ -227,38 +300,62 @@ export default function HeroSection({ slides = HERO_SLIDES }: { slides?: HeroSli
 
   return (
     <section className="relative isolate flex h-[100svh] min-h-[520px] w-full items-end overflow-hidden bg-[#222831] [@media(max-height:480px)]:min-h-[420px]">
-      {/* Background poster layer: immediately visible while video loads or if video fails */}
-      <div
-        className="absolute inset-0 -z-30 bg-[#222831] bg-cover bg-center transition-opacity duration-700"
-        style={{ backgroundImage: `url(${posterSrc})` }}
+      {/* Thumbnail layer: real <img> so it shows immediately while the video loads.
+          It sits UNDER the video, so it can never hide the video. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={thumbnail}
+        alt=""
         aria-hidden
+        loading="eager"
+        decoding="async"
+        fetchPriority="high"
+        onError={() => {
+          // Try the next thumbnail path (/images -> /image)
+          setThumbIndex((i) => (i < HERO_THUMBNAILS.length - 1 ? i + 1 : i));
+        }}
+        className={`absolute inset-0 -z-30 h-full w-full object-cover object-center transition-opacity duration-700 ${
+          videoReady ? "opacity-0 delay-700" : "opacity-100"
+        }`}
       />
 
-      {/* Single video element: muted and playsInline for Chrome / mobile autoplay */}
+      {/* Video: always visible. key={videoSrc} re-creates the element when we switch to a fallback
+          source, so the browser starts a clean load + autoplay for it. */}
       <video
+        key={videoSrc}
         ref={setVideoRef}
         src={videoSrc}
-        poster={posterSrc}
+        poster={thumbnail}
         autoPlay
         muted={muted}
         playsInline
         preload="auto"
         disablePictureInPicture
         aria-hidden
+        onLoadedData={() => {
+          const v = videoRef.current;
+          if (v && !v.paused) markReady();
+        }}
+        onCanPlay={() => {
+          // Kick playback if the browser did not start it by itself
+          const v = videoRef.current;
+          if (v && v.paused && !isAutoplayBlocked) attemptPlay();
+        }}
         onTimeUpdate={(e) => {
           const v = e.currentTarget;
           if (v.duration) setProgress(v.currentTime / v.duration);
+          if (!videoReady && v.currentTime > 0) markReady();
         }}
         onEnded={advance}
-        onPlay={() => {
+        onPlaying={() => {
           setIsAutoplayBlocked(false);
+          markReady();
         }}
-        onError={() => {
-          console.warn("Hero video failed to load or play:", videoSrc);
-          if (videoSrc !== "/videos/homevideo1.mp4") {
-            setVideoSrc("/videos/homevideo1.mp4");
-            setPosterSrc("/hero.webp");
+        onError={(e) => {
+          if (process.env.NODE_ENV === "development") {
+            console.error("[Hero] Video failed to load:", videoSrc, e.currentTarget.error);
           }
+          tryNextSource();
         }}
         className="absolute inset-0 -z-20 h-full w-full object-cover object-center"
       />

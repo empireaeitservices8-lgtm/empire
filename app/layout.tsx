@@ -27,11 +27,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var n=function(){};console.log=n;console.info=n;console.warn=n;console.error=n;console.debug=n;if(console.clear)console.clear();}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col">
         <Header/>{children}
         <Chatbot/>
         <Footer/>
-        </body>
+      </body>
     </html>
   );
 }

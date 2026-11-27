@@ -28,8 +28,7 @@ body {
 /* Hide horizontal and vertical scrollbars */
 html,
 body {
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow-x: clip;
 }
 
 /* Hide scrollbars for all elements */
@@ -42,26 +41,31 @@ body {
   display: none; /* Chrome, Safari */
 }
 
-
-/* ---------- Smooth page scrolling ---------- */
+/* ---------- Lenis smooth page scrolling ---------- */
 html {
-  scroll-behavior: smooth;
   scroll-padding-top: 90px;
 }
 
-.sv-root {
-  scroll-behavior: smooth;
+html.lenis,
+html.lenis body {
+  height: auto;
 }
 
-/* Respect users who prefer reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
 }
 
-/* Append to app/globals.css */
-html { scroll-behavior: smooth; }
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
 
 .reveal { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
 .reveal.is-visible { opacity: 1; transform: none; }
@@ -70,7 +74,6 @@ html { scroll-behavior: smooth; }
 .float { animation: float 6s ease-in-out infinite; }
 
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; transition: none; }
   .float { animation: none; }
 }

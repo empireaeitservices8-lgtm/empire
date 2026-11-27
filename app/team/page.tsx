@@ -1,6 +1,13 @@
 "use client";
 
-import React, { memo, useMemo, useState } from "react";
+import React, {
+  memo,
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Search, UserX, X } from "lucide-react";
 
 /* ========================================================================== */
@@ -39,7 +46,8 @@ const DEPARTMENTS: Department[] = [
 ];
 
 const CLOUDINARY_CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "diy4ratd";
-const CLOUDINARY_TEAM_BASE = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/f_auto,q_auto/empire-ae/team`;
+// w_600 / c_limit: the browser downloads and decodes a small image instead of a huge original
+const CLOUDINARY_TEAM_BASE = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/f_auto,q_auto,w_600,c_limit/empire-ae/team`;
 
 const p = (n: string) => `${CLOUDINARY_TEAM_BASE}/photos-${n}.jpg`;
 
@@ -53,7 +61,7 @@ const TEAM_MEMBERS: TeamMember[] = [
   { id: "silpa-raji", name: "Silpa Raji", role: "Content Creator", department: "Content Creator",  image: "/team/PHOTO-ONE/silpa.jpg"  },
   { id: "muhammed-nabeel", name: "Muhammed Nabeel", role: "Python Developer", department: "Engineering",  image: "/team/PHOTO-ONE/nabeel.jpg" },
   { id: "aslam-k-m", name: "Aslam K M", role: "Flutter Developer", department: "Engineering", image: "/team/PHOTO-ONE/aslam.jpg"  },
-  
+
   { id: "alen-shaji", name: "Alen Shaji", role: "Operations Assistant", department: "Operations",  image: "/team/PHOTO-ONE/alan.jpg" },
   // BUSINESS
   { id: "gayathri-harsha", name: "Gayathri Harsha M", role: "Business Development Executive", department: "Business",  image: "/team/PHOTO-ONE/gayatri.jpg"  },
@@ -83,7 +91,7 @@ const TEAM_MEMBERS: TeamMember[] = [
   { id: "arjun-shaji", name: "Arjun Shaji", role: "Digital Marketing Executive", department: "Marketing",  image: "/team/PHOTO-ONE/arjun.png"  },
   { id: "aswathy-v", name: "Aswathy V", role: "Digital Marketing Executive", department: "Marketing",  image: "/team/PHOTO-ONE/ashwathy.jpg"  },
   { id: "soji", name: "Soji Kurian", role: "Digital Marketing Executive", department: "Marketing",  image: "/team/PHOTO-ONE/soji.png"  },
-  
+
 
   // OPERATIONS
   { id: "nahla-nasarin", name: "Nahla Nasarin K.N", role: "Operations Executive", department: "Operations", image: "/team/PHOTO-ONE/nahla.jpg"  },
@@ -95,8 +103,11 @@ const TEAM_MEMBERS: TeamMember[] = [
 
 /* ========================================================================== */
 /* 2. CARD                                                                    */
-/* The image is always visible (no fade/blur waiting for onLoad), so it shows */
-/* up as soon as the browser has it. First 8 load immediately, rest lazily.   */
+/* Smooth-scroll fixes:                                                       */
+/*  - content-visibility:auto  -> off-screen cards are not painted/laid out   */
+/*  - skeleton shimmer + fade-in -> no layout jump or blank flash on load     */
+/*  - GPU hints on the hover-zoom image                                       */
+/*  - First 8 load immediately, the rest lazily                               */
 /* ========================================================================== */
 
 const MemberCard = memo(function MemberCard({
@@ -108,8 +119,19 @@ const MemberCard = memo(function MemberCard({
 }) {
   const [src, setSrc] = useState(member.image);
   const [failed, setFailed] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement | null>(null);
+
+  // If the image was already cached/loaded before React attached onLoad
+  useEffect(() => {
+    const img = imgRef.current;
+    if (img && img.complete && img.naturalWidth > 0) {
+      setLoaded(true);
+    }
+  }, [src]);
 
   const handleError = () => {
+    setLoaded(false);
     // If Cloudinary URL failed, fall back to local file
     if (src.includes("res.cloudinary.com")) {
       const filename = src.split("/").pop();
@@ -136,25 +158,40 @@ const MemberCard = memo(function MemberCard({
   };
 
   return (
-    <article className="group">
-      <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[28px] bg-[#1a1f29]">
+    <article className="group [content-visibility:auto] [contain-intrinsic-size:auto_420px]">
+      <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[28px] bg-[#1a1f29] [transform:translateZ(0)]">
         {failed ? (
           <div className="grid h-full w-full place-items-center text-5xl font-semibold text-white/25">
             {member.name.charAt(0)}
           </div>
         ) : (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={src}
-            alt={member.name}
-            width={600}
-            height={800}
-            loading={eager ? "eager" : "lazy"}
-            fetchPriority={eager ? "high" : "auto"}
-            decoding="async"
-            onError={handleError}
-            className="h-full w-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-110"
-          />
+          <>
+            {/* Loading skeleton */}
+            {!loaded && (
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 animate-pulse bg-gradient-to-br from-[#1a1f29] via-[#232a36] to-[#1a1f29]"
+              />
+            )}
+
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              ref={imgRef}
+              src={src}
+              alt={member.name}
+              width={600}
+              height={800}
+              loading={eager ? "eager" : "lazy"}
+              fetchPriority={eager ? "high" : "auto"}
+              decoding="async"
+              draggable={false}
+              onLoad={() => setLoaded(true)}
+              onError={handleError}
+              className={`h-full w-full transform-gpu object-cover object-top will-change-transform transition-[transform,opacity] duration-500 ease-out group-hover:scale-105 ${
+                loaded ? "opacity-100" : "opacity-0"
+              }`}
+            />
+          </>
         )}
 
         {/* Department (Engineering, Design...) over the image, top right */}
@@ -182,6 +219,9 @@ export default function TeamPage() {
   const [selectedDept, setSelectedDept] = useState<Department>("All");
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Typing stays instant; the heavy grid re-render is deferred
+  const deferredQuery = useDeferredValue(searchQuery);
+
   const deptCounts = useMemo(() => {
     const counts: Record<Department, number> = {
       All: TEAM_MEMBERS.length,
@@ -200,7 +240,7 @@ export default function TeamPage() {
   }, []);
 
   const filteredMembers = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase();
+    const q = deferredQuery.trim().toLowerCase();
     return TEAM_MEMBERS.filter((m) => {
       const inDept = selectedDept === "All" || m.department === selectedDept;
       const inSearch =
@@ -210,7 +250,7 @@ export default function TeamPage() {
         m.department.toLowerCase().includes(q);
       return inDept && inSearch;
     });
-  }, [selectedDept, searchQuery]);
+  }, [selectedDept, deferredQuery]);
 
   const resetFilters = () => {
     setSelectedDept("All");

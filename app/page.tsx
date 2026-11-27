@@ -117,6 +117,8 @@ export default function Home() {
       autoRaf: false,
       anchors: true,
       syncTouch: false, // keep native touch scrolling on phones (smoother, no lag)
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       prevent: (node) => {
         const section = node.closest(".eae-showcase");
         return !!section && isReviewsEngaged(section);
@@ -127,7 +129,7 @@ export default function Home() {
     lenis.on("scroll", ScrollTrigger.update);
     const tick = (time: number) => lenis.raf(time * 1000);
     gsap.ticker.add(tick);
-    gsap.ticker.lagSmoothing(0);
+    gsap.ticker.lagSmoothing(500, 33);
 
     return () => {
       gsap.ticker.remove(tick);
