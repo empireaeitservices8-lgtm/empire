@@ -1,24 +1,5 @@
 "use client";
 
-/* =====================================================================
-   Empire: Contact page (single file) with EmailJS
-   Save as: app/contact/page.tsx
-   ---------------------------------------------------------------------
-   Install once:   npm install @emailjs/browser
-   Create .env.local in the project root (restart the dev server after):
-
-     NEXT_PUBLIC_EMAILJS_SERVICE_ID=service_xxxxxxx
-     NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=template_xxxxxxx
-     NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=xxxxxxxxxxxxxxxx
-
-   EmailJS template variables used (put these in your template):
-     {{from_name}}  {{from_email}}  {{reply_to}}  {{phone}}
-     {{company}}    {{service}}     {{message}}
-
-   Optional: to use a downloaded animated icon (GIF / WebP / PNG from
-   Flaticon) on the success screen, put it in /public and set
-   SUCCESS_ICON_SRC below, for example "/images/message-sent.gif".
-   ===================================================================== */
 
 import {
   useEffect,
@@ -67,9 +48,9 @@ const SERVICES = [
   "Website Design & Development",
   "Web Application Development",
   "Mobile App Development",
-  "UI/UX Design",
-  "Digital Transformation",
-  "AI & Automation",
+  "Graphic Design",
+  "Digital Marketing",
+  "SEO",
   "E-commerce Development",
   "Other",
 ] as const;
